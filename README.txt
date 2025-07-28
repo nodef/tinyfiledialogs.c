@@ -11,7 +11,7 @@ Copyright (c) 2014 - 2024 Guillaume Vareille http://ysengrin.com
   | 100% compatible C C++  ->  You can rename tinfiledialogs.c as .cpp |
   |____________________________________________________________________|
 
-tiny file dialogs ( cross-platform C C++ ) v3.19.2 [Jul 24, 2025]
+tiny file dialogs ( cross-platform C C++ ) v3.19.3 [Jul 28, 2025]
  _________
 /         \   Tray-popup InputBox PasswordBox MessageBox Notification Beep ColorPicker
 |tiny file|   ColorPicker OpenFileDialog SaveFileDialog SelectFolderDialog
