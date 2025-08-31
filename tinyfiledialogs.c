@@ -61,7 +61,7 @@ misrepresented as being the original software.
   #ifdef __FreeBSD__
     #define _POSIX_C_SOURCE 199506L /* 199506L is enough for freebsd for realpath() */
   #elif defined(__NetBSD__)
-    #define _POSIX_C_SOURCE 199506L /* 199506L is enough for freebsd for realpath() */
+/*#define _POSIX_C_SOURCE 199506L */ /* 199506L is enough for freebsd for realpath() */
     #include <sys/param.h>
   #elif defined(__illumos__) || defined(__solaris__)
     #define _POSIX_C_SOURCE 200112L /* illumos/solaris needs 200112L for realpath() */
