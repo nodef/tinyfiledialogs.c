@@ -70,7 +70,7 @@ misrepresented as being the original software.
 #endif
 
 #ifdef __NetBSD__
-
+#include <sys/param.h>
 #endif
 
 #include <stdio.h>
