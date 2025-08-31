@@ -70,7 +70,7 @@ misrepresented as being the original software.
 #endif
 
 #ifdef __NetBSD__
-   #define _POSIX_C_SOURCE 199506L
+
 #endif
 
 #include <stdio.h>
