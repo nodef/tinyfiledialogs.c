@@ -58,7 +58,9 @@ misrepresented as being the original software.
 #ifndef _GNU_SOURCE
  #define _GNU_SOURCE /* used only to resolve symbolic links. Can be commented out */
  #ifndef _POSIX_C_SOURCE
-  #ifdef __FreeBSD__
+  #ifdef __NetBSD__
+    #define _POSIX_C_SOURCE 200112L 
+  #elif defined(__FreeBSD__)
     #define _POSIX_C_SOURCE 199506L /* 199506L is enough for freebsd for realpath() */
   #elif defined(__illumos__) || defined(__solaris__)
     #define _POSIX_C_SOURCE 200112L /* illumos/solaris needs 200112L for realpath() */
@@ -67,10 +69,6 @@ misrepresented as being the original software.
   #endif
  #endif
 #endif
-#endif
-
-#ifdef __NetBSD__
-#include <sys/param.h>
 #endif
 
 #include <stdio.h>
