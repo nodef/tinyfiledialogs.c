@@ -7,7 +7,7 @@ Copyright (c) 2014 - 2024 Guillaume Vareille http://ysengrin.com
 
 ********* TINY FILE DIALOGS OFFICIAL WEBSITE IS ON SOURCEFORGE *********
   _________
- /         \ tinyfiledialogs.c v3.19.3 [Jul 28, 2025] zlib licence
+ /         \ tinyfiledialogs.c v3.20 [Aug 31, 2025] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs |
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -60,7 +60,7 @@ misrepresented as being the original software.
  #ifndef _POSIX_C_SOURCE
   #ifdef __NetBSD__
     #define _POSIX_C_SOURCE 200112L
-    #define _XOPEN_SOURCE 600
+    #define _XOPEN_SOURCE 600 /* https://pubs.opengroup.org/onlinepubs/007904875/functions/xsh_chap02_02.html */
   #elif defined(__FreeBSD__)
     #define _POSIX_C_SOURCE 199506L /* 199506L is enough for freebsd for realpath() */
   #elif defined(__illumos__) || defined(__solaris__)
@@ -111,7 +111,7 @@ misrepresented as being the original software.
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char tinyfd_version[8] = "3.19.3";
+char tinyfd_version[8] = "3.20";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
