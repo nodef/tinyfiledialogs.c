@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: Zlib
-Copyright (c) 2014 - 2024 Guillaume Vareille http://ysengrin.com
+Copyright (c) 2014 - 2025 Guillaume Vareille http://ysengrin.com
 	 ____________________________________________________________________
 	|                                                                    |
 	| 100% compatible C C++  ->  You can rename tinfiledialogs.c as .cpp |
