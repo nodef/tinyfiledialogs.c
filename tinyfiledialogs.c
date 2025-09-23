@@ -5406,7 +5406,7 @@ my \\$notificationsObject = \\$notificationsService->get_object('/org/freedeskto
 								printf("\n%s\n\n",aMessage);
 						}
 						printf("press enter to continue "); fflush(stdout);
-						getchar() ;
+						(void) getchar() ;
 						printf("\n\n");
 						lResult = 1 ;
 				}
