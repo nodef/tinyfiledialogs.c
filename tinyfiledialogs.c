@@ -891,7 +891,7 @@ static int dirExists(char const * aDirPath)
 			else
 						return 0;
 		}
-#if (defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)) || defined(__BORLANDC__) || defined(__WATCOMC__)
+#if (defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)) || defined(__BORLANDC__) || defined(__WATCOMC__) || defined(__DMC__)
 		else if (_stat(aDirPath, &lInfo) != 0)
 #else
 		else if (_stat64(aDirPath, &lInfo) != 0)
