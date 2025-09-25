@@ -2639,7 +2639,8 @@ static int inputBoxWinConsole(
 		/* printf( "lDialogString: %s\n" , lDialogString ) ; */
 		system( lDialogString ) ;
 
-		if (!(lIn = fopen(lDialogFile, "r")))
+		lIn = ( FILE * ) fopen(lDialogFile, "r");
+		if ( ! lIn )
 		{
 				remove(lDialogFile);
 								aoBuff[0] = '\0';
