@@ -2544,7 +2544,7 @@ static int messageBoxWinConsole(
 		system( lDialogString ) ;
 
 		lIn = ( FILE * ) fopen(lDialogFile, "r");
-		if ( ! Lin )
+		if ( ! lIn )
 		{
 				remove(lDialogFile);
 				return 0 ;
