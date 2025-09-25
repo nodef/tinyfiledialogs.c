@@ -722,8 +722,7 @@ static void wipefileW(wchar_t const * aFilename)
 {
 	int i;
 	FILE * lIn;
-#if (defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3))
-	|| defined(__BORLANDC__) || defined(__WATCOMC__) || defined(__DMC__)
+#if (defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)) || defined(__BORLANDC__) || defined(__WATCOMC__) || defined(__DMC__)
 	struct _stat st;
 	if (_wstat(aFilename, &st) == 0)
 #else
