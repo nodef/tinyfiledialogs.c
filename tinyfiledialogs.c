@@ -2842,7 +2842,8 @@ static char * selectFolderDialogWinConsole(
 		/* printf( "lDialogString: %s\n" , lDialogString ) ; */
 		system( lDialogString ) ;
 
-		if (!(lIn = fopen(lString, "r")))
+		lIn = ( FILE * ) fopen(lString, "r") ;
+		if ( ! lIn )
 		{
 				remove(lString);
 				return NULL;
