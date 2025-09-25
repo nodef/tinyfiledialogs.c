@@ -573,7 +573,7 @@ static void replaceChr(char * aString, char aOldChr, char aNewChr)
 	if (aOldChr == aNewChr) return;
 
 	p = aString;
-	while ((p = strchr(p , aOldChr)))
+	while ((p = strchr(p, aOldChr)))
 	{
 		*p = aNewChr;
 		p++;
