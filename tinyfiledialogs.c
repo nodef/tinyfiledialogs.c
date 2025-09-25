@@ -2543,7 +2543,8 @@ static int messageBoxWinConsole(
 		/*if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;*/
 		system( lDialogString ) ;
 
-		if (!(lIn = fopen(lDialogFile, "r")))
+		lIn = ( FILE * ) fopen(lDialogFile, "r");
+		if ( ! Lin )
 		{
 				remove(lDialogFile);
 				return 0 ;
