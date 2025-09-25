@@ -320,88 +320,88 @@ static void Hex2RGB( char const aHexRGB[8] , unsigned char aoResultRGB[3] )
 
 static void RGB2Hex( unsigned char const aRGB[3], char aoResultHexRGB[8] )
 {
-		if ( aoResultHexRGB )
+	if ( aoResultHexRGB )
+	{
+		if ( aRGB )
 		{
-				if ( aRGB )
-				{
 #if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__)
-	sprintf(aoResultHexRGB, "#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
+			sprintf(aoResultHexRGB, "#%02hhx%02hhx%02hhx", aRGB[0], aRGB[1], aRGB[2]);
 #else
-	sprintf(aoResultHexRGB, "#%02hx%02hx%02hx", aRGB[0], aRGB[1], aRGB[2]);
+			sprintf(aoResultHexRGB, "#%02hx%02hx%02hx", aRGB[0], aRGB[1], aRGB[2]);
 #endif
-						 /*printf("aoResultHexRGB %s\n", aoResultHexRGB);*/
-				}
-				else
-				{
-						aoResultHexRGB[0]=0;
-						aoResultHexRGB[1]=0;
-						aoResultHexRGB[2]=0;
-				}
+		 /*printf("aoResultHexRGB %s\n", aoResultHexRGB);*/
 		}
+		else
+		{
+			aoResultHexRGB[0]=0;
+			aoResultHexRGB[1]=0;
+			aoResultHexRGB[2]=0;
+		}
+	}
 }
 
 
 void tfd_replaceSubStr( char const * aSource, char const * aOldSubStr,
 						char const * aNewSubStr, char * aoDestination )
 {
-		char const * pOccurence ;
-		char const * p ;
-		char const * lNewSubStr = "" ;
-		size_t lOldSubLen = strlen( aOldSubStr ) ;
+	char const * pOccurence ;
+	char const * p ;
+	char const * lNewSubStr = "" ;
+	size_t lOldSubLen = strlen( aOldSubStr ) ;
 
-		if ( ! aSource )
-		{
-				* aoDestination = '\0' ;
-				return ;
-		}
-		if ( ! aOldSubStr )
-		{
-				strcpy( aoDestination , aSource ) ;
-				return ;
-		}
-		if ( aNewSubStr )
-		{
-				lNewSubStr = aNewSubStr ;
-		}
-		p = aSource ;
+	if ( ! aSource )
+	{
 		* aoDestination = '\0' ;
-		while ( ( pOccurence = strstr( p , aOldSubStr ) ) != NULL )
-		{
-				strncat( aoDestination , p , pOccurence - p ) ;
-				strcat( aoDestination , lNewSubStr ) ;
-				p = pOccurence + lOldSubLen ;
-		}
-		strcat( aoDestination , p ) ;
+		return ;
+	}
+	if ( ! aOldSubStr )
+	{
+		strcpy( aoDestination , aSource ) ;
+		return ;
+	}
+	if ( aNewSubStr )
+	{
+		lNewSubStr = aNewSubStr ;
+	}
+	p = aSource ;
+	* aoDestination = '\0' ;
+	while ( ( pOccurence = strstr( p , aOldSubStr ) ) != NULL )
+	{
+		strncat( aoDestination , p , pOccurence - p ) ;
+		strcat( aoDestination , lNewSubStr ) ;
+		p = pOccurence + lOldSubLen ;
+	}
+	strcat( aoDestination , p ) ;
 }
 
 
 static int filenameValid( char const * aFileNameWithoutPath )
 {
-		if ( ! aFileNameWithoutPath
-		  || ! strlen(aFileNameWithoutPath)
-		  || strpbrk(aFileNameWithoutPath , "\\/:*?\"<>|") )
-		{
-				return 0 ;
-		}
-		return 1 ;
+	if ( ! aFileNameWithoutPath
+	  || ! strlen(aFileNameWithoutPath)
+	  || strpbrk(aFileNameWithoutPath , "\\/:*?\"<>|") )
+	{
+		return 0 ;
+	}
+	return 1 ;
 }
 
 #ifndef _WIN32
 
 static int fileExists( char const * aFilePathAndName )
 {
-		FILE * lIn ;
-		if ( ! aFilePathAndName || ! strlen(aFilePathAndName) )
-		{
-				return 0 ;
-		}
-		lIn = fopen( aFilePathAndName , "r" ) ;
-		if ( ! lIn )
-		{
-				return 0 ;
-		}
-		fclose( lIn ) ;
-		return 1 ;
+	FILE * lIn ;
+	if ( ! aFilePathAndName || ! strlen(aFilePathAndName) )
+	{
+			return 0 ;
+	}
+	lIn = fopen( aFilePathAndName , "r" ) ;
+	if ( ! lIn )
+	{
+			return 0 ;
+	}
+	fclose( lIn ) ;
+	return 1 ;
 }
 
 #endif
@@ -409,21 +409,22 @@ static int fileExists( char const * aFilePathAndName )
 
 static void wipefile(char const * aFilename)
 {
-		int i;
-		struct stat st;
-		FILE * lIn;
+	int i;
+	struct stat st;
+	FILE * lIn;
 
-		if (stat(aFilename, &st) == 0)
+	if (stat(aFilename, &st) == 0)
+	{
+		lIn = ( FILE * ) fopen(aFilename, "w") ;
+		if ( lIn )
 		{
-				if ((lIn = fopen(aFilename, "w")))
-				{
-						for (i = 0; i < st.st_size; i++)
-						{
-								fputc('A', lIn);
-						}
-						fclose(lIn);
-				}
+			for (i = 0; i < st.st_size; i++)
+			{
+					fputc('A', lIn);
+			}
+			fclose(lIn);
 		}
+	}
 }
 
 
@@ -462,41 +463,41 @@ int tfd_quoteDetected(char const * aString)
 
 char const * tinyfd_getGlobalChar(char const * aCharVariableName) /* to be called from C# (you don't need this in C or C++) */
 {
-		if (!aCharVariableName || !strlen(aCharVariableName)) return NULL;
-		else if (!strcmp(aCharVariableName, "tinyfd_version")) return tinyfd_version;
-		else if (!strcmp(aCharVariableName, "tinyfd_needs")) return tinyfd_needs;
-		else if (!strcmp(aCharVariableName, "tinyfd_response")) return tinyfd_response;
-		else return NULL ;
+	if (!aCharVariableName || !strlen(aCharVariableName)) return NULL;
+	else if (!strcmp(aCharVariableName, "tinyfd_version")) return tinyfd_version;
+	else if (!strcmp(aCharVariableName, "tinyfd_needs")) return tinyfd_needs;
+	else if (!strcmp(aCharVariableName, "tinyfd_response")) return tinyfd_response;
+	else return NULL ;
 }
 
 
 int tinyfd_getGlobalInt(char const * aIntVariableName) /* to be called from C# (you don't need this in C or C++) */
 {
-		if ( !aIntVariableName || !strlen(aIntVariableName) ) return -1 ;
-		else if ( !strcmp(aIntVariableName, "tinyfd_verbose") ) return tinyfd_verbose ;
-		else if ( !strcmp(aIntVariableName, "tinyfd_silent") ) return tinyfd_silent ;
-		else if ( !strcmp(aIntVariableName, "tinyfd_allowCursesDialogs") ) return tinyfd_allowCursesDialogs ;
-		else if ( !strcmp(aIntVariableName, "tinyfd_forceConsole") ) return tinyfd_forceConsole ;
-		/* else if ( !strcmp(aIntVariableName, "tinyfd_assumeGraphicDisplay") ) return tinyfd_assumeGraphicDisplay ; */
+	if ( !aIntVariableName || !strlen(aIntVariableName) ) return -1 ;
+	else if ( !strcmp(aIntVariableName, "tinyfd_verbose") ) return tinyfd_verbose ;
+	else if ( !strcmp(aIntVariableName, "tinyfd_silent") ) return tinyfd_silent ;
+	else if ( !strcmp(aIntVariableName, "tinyfd_allowCursesDialogs") ) return tinyfd_allowCursesDialogs ;
+	else if ( !strcmp(aIntVariableName, "tinyfd_forceConsole") ) return tinyfd_forceConsole ;
+	/* else if ( !strcmp(aIntVariableName, "tinyfd_assumeGraphicDisplay") ) return tinyfd_assumeGraphicDisplay ; */
 #ifdef _WIN32
-		else if ( !strcmp(aIntVariableName, "tinyfd_winUtf8") ) return tinyfd_winUtf8 ;
+	else if ( !strcmp(aIntVariableName, "tinyfd_winUtf8") ) return tinyfd_winUtf8 ;
 #endif
-		else return -1;
+	else return -1;
 }
 
 
 int tinyfd_setGlobalInt(char const * aIntVariableName, int aValue) /* to be called from C# (you don't need this in C or C++) */
 {
-		if (!aIntVariableName || !strlen(aIntVariableName)) return -1 ;
-		else if (!strcmp(aIntVariableName, "tinyfd_verbose")) { tinyfd_verbose = aValue; return tinyfd_verbose; }
-		else if (!strcmp(aIntVariableName, "tinyfd_silent")) { tinyfd_silent = aValue; return tinyfd_silent; }
-		else if (!strcmp(aIntVariableName, "tinyfd_allowCursesDialogs")) { tinyfd_allowCursesDialogs = aValue; return tinyfd_allowCursesDialogs; }
-		else if (!strcmp(aIntVariableName, "tinyfd_forceConsole")) { tinyfd_forceConsole = aValue; return tinyfd_forceConsole; }
-		/* else if (!strcmp(aIntVariableName, "tinyfd_assumeGraphicDisplay")) { tinyfd_assumeGraphicDisplay = aValue; return tinyfd_assumeGraphicDisplay; } */
+	if (!aIntVariableName || !strlen(aIntVariableName)) return -1 ;
+	else if (!strcmp(aIntVariableName, "tinyfd_verbose")) { tinyfd_verbose = aValue; return tinyfd_verbose; }
+	else if (!strcmp(aIntVariableName, "tinyfd_silent")) { tinyfd_silent = aValue; return tinyfd_silent; }
+	else if (!strcmp(aIntVariableName, "tinyfd_allowCursesDialogs")) { tinyfd_allowCursesDialogs = aValue; return tinyfd_allowCursesDialogs; }
+	else if (!strcmp(aIntVariableName, "tinyfd_forceConsole")) { tinyfd_forceConsole = aValue; return tinyfd_forceConsole; }
+	/* else if (!strcmp(aIntVariableName, "tinyfd_assumeGraphicDisplay")) { tinyfd_assumeGraphicDisplay = aValue; return tinyfd_assumeGraphicDisplay; } */
 #ifdef _WIN32
-		else if (!strcmp(aIntVariableName, "tinyfd_winUtf8")) { tinyfd_winUtf8 = aValue; return tinyfd_winUtf8; }
+	else if (!strcmp(aIntVariableName, "tinyfd_winUtf8")) { tinyfd_winUtf8 = aValue; return tinyfd_winUtf8; }
 #endif
-		else return -1;
+	else return -1;
 }
 
 
@@ -511,7 +512,8 @@ static int powershellPresent(void)
 
 	if (lPowershellPresent < 0)
 	{
-		if (!(lIn = _popen("where powershell.exe", "r")))
+		lIn = ( FILE * ) _popen("where powershell.exe", "r") ;
+		if (! lIn )
 		{
 			lPowershellPresent = 0;
 			return 0;
@@ -565,18 +567,18 @@ static int windowsVersion(void)
 
 static void replaceChr(char * aString, char aOldChr, char aNewChr)
 {
-		char * p;
+	char * p;
 
-		if (!aString) return;
-		if (aOldChr == aNewChr) return;
+	if (!aString) return;
+	if (aOldChr == aNewChr) return;
 
-		p = aString;
-		while ((p = strchr(p, aOldChr)))
-		{
-				*p = aNewChr;
-				p++;
-		}
-		return;
+	p = aString;
+	while ((p = strchr(p, aOldChr)))
+	{
+		*p = aNewChr;
+		p++;
+	}
+	return;
 }
 
 
@@ -587,31 +589,31 @@ static void replaceChr(char * aString, char aOldChr, char aNewChr)
 
 static int sizeUtf16From8(char const * aUtf8string)
 {
-		return MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
-				aUtf8string, -1, NULL, 0);
+	return MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+			aUtf8string, -1, NULL, 0);
 }
 
 
 static int sizeUtf16FromMbcs(char const * aMbcsString)
 {
-		return MultiByteToWideChar(CP_ACP, MB_ERR_INVALID_CHARS,
-				aMbcsString, -1, NULL, 0);
+	return MultiByteToWideChar(CP_ACP, MB_ERR_INVALID_CHARS,
+			aMbcsString, -1, NULL, 0);
 }
 
 
 static int sizeUtf8(wchar_t const * aUtf16string)
 {
-		return WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-				aUtf16string, -1, NULL, 0, NULL, NULL);
+	return WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
+			aUtf16string, -1, NULL, 0, NULL, NULL);
 }
 
 
 static int sizeMbcs(wchar_t const * aMbcsString)
 {
-		int lRes = WideCharToMultiByte(CP_ACP, 0,
-				aMbcsString, -1, NULL, 0, NULL, NULL);
-		/* DWORD licic = GetLastError(); */
-		return lRes;
+	int lRes = WideCharToMultiByte(CP_ACP, 0,
+			aMbcsString, -1, NULL, 0, NULL, NULL);
+	/* DWORD licic = GetLastError(); */
+	return lRes;
 }
 
 
@@ -635,12 +637,12 @@ wchar_t* tinyfd_mbcsTo16(char const* aMbcsString)
 
 wchar_t * tinyfd_utf8to16(char const * aUtf8string)
 {
-		static wchar_t * lUtf16string = NULL;
-		int lSize;
+	static wchar_t * lUtf16string = NULL;
+	int lSize;
 
-		free(lUtf16string);
-		if (!aUtf8string) {lUtf16string = NULL; return NULL;}
-		lSize = sizeUtf16From8(aUtf8string);
+	free(lUtf16string);
+	if (!aUtf8string) {lUtf16string = NULL; return NULL;}
+	lSize = sizeUtf16From8(aUtf8string);
 	if (lSize)
 	{
 		lUtf16string = (wchar_t*) malloc(lSize * sizeof(wchar_t));
@@ -659,12 +661,12 @@ wchar_t * tinyfd_utf8to16(char const * aUtf8string)
 
 char * tinyfd_utf16toMbcs(wchar_t const * aUtf16string)
 {
-		static char * lMbcsString = NULL;
-		int lSize;
+	static char * lMbcsString = NULL;
+	int lSize;
 
-		free(lMbcsString);
-		if (!aUtf16string) { lMbcsString = NULL; return NULL; }
-		lSize = sizeMbcs(aUtf16string);
+	free(lMbcsString);
+	if (!aUtf16string) { lMbcsString = NULL; return NULL; }
+	lSize = sizeMbcs(aUtf16string);
 	if (lSize)
 	{
 		lMbcsString = (char*) malloc(lSize);
@@ -677,35 +679,35 @@ char * tinyfd_utf16toMbcs(wchar_t const * aUtf16string)
 
 char * tinyfd_utf8toMbcs(char const * aUtf8string)
 {
-		wchar_t const * lUtf16string;
-		lUtf16string = tinyfd_utf8to16(aUtf8string);
-		return tinyfd_utf16toMbcs(lUtf16string);
+	wchar_t const * lUtf16string;
+	lUtf16string = tinyfd_utf8to16(aUtf8string);
+	return tinyfd_utf16toMbcs(lUtf16string);
 }
 
 
 char * tinyfd_utf16to8(wchar_t const * aUtf16string)
 {
-		static char * lUtf8string = NULL;
-		int lSize;
+	static char * lUtf8string = NULL;
+	int lSize;
 
-		free(lUtf8string);
-		if (!aUtf16string) { lUtf8string = NULL; return NULL; }
-		lSize = sizeUtf8(aUtf16string);
+	free(lUtf8string);
+	if (!aUtf16string) { lUtf8string = NULL; return NULL; }
+	lSize = sizeUtf8(aUtf16string);
 	if (lSize)
 	{
 		lUtf8string = (char*) malloc(lSize);
 		lSize = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, aUtf16string, -1, lUtf8string, lSize, NULL, NULL);
 	}
 	else strcpy(lUtf8string, "");
-		return lUtf8string;
+	return lUtf8string;
 }
 
 
 char * tinyfd_mbcsTo8(char const * aMbcsString)
 {
-		wchar_t const * lUtf16string;
-		lUtf16string = tinyfd_mbcsTo16(aMbcsString);
-		return tinyfd_utf16to8(lUtf16string);
+	wchar_t const * lUtf16string;
+	lUtf16string = tinyfd_mbcsTo16(aMbcsString);
+	return tinyfd_utf16to8(lUtf16string);
 }
 
 
@@ -718,25 +720,25 @@ void tinyfd_beep(void)
 
 static void wipefileW(wchar_t const * aFilename)
 {
-		int i;
-		FILE * lIn;
+	int i;
+	FILE * lIn;
 #if (defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)) || defined(__BORLANDC__) || defined(__WATCOMC__)
-		struct _stat st;
-		if (_wstat(aFilename, &st) == 0)
+	struct _stat st;
+	if (_wstat(aFilename, &st) == 0)
 #else
-		struct __stat64 st;
-		if (_wstat64(aFilename, &st) == 0)
+	struct __stat64 st;
+	if (_wstat64(aFilename, &st) == 0)
 #endif
+	{
+		if ((lIn = _wfopen(aFilename, L"w")))
 		{
-				if ((lIn = _wfopen(aFilename, L"w")))
-				{
-						for (i = 0; i < st.st_size; i++)
-						{
-								fputc('A', lIn);
-						}
-						fclose(lIn);
-				}
+			for (i = 0; i < st.st_size; i++)
+			{
+				fputc('A', lIn);
+			}
+			fclose(lIn);
 		}
+	}
 }
 
 
@@ -744,29 +746,29 @@ static wchar_t * getPathWithoutFinalSlashW(
 		wchar_t * aoDestination, /* make sure it is allocated, use _MAX_PATH */
 		wchar_t const * aSource) /* aoDestination and aSource can be the same */
 {
-		wchar_t const * lTmp;
-		if (aSource)
+	wchar_t const * lTmp;
+	if (aSource)
+	{
+		lTmp = wcsrchr(aSource, L'/');
+		if (!lTmp)
 		{
-				lTmp = wcsrchr(aSource, L'/');
-				if (!lTmp)
-				{
-						lTmp = wcsrchr(aSource, L'\\');
-				}
-				if (lTmp)
-				{
-						wcsncpy(aoDestination, aSource, lTmp - aSource);
-						aoDestination[lTmp - aSource] = L'\0';
-				}
-				else
-				{
-						*aoDestination = L'\0';
-				}
+			lTmp = wcsrchr(aSource, L'\\');
+		}
+		if (lTmp)
+		{
+			wcsncpy(aoDestination, aSource, lTmp - aSource);
+			aoDestination[lTmp - aSource] = L'\0';
 		}
 		else
 		{
-				*aoDestination = L'\0';
+			*aoDestination = L'\0';
 		}
-		return aoDestination;
+	}
+	else
+	{
+		*aoDestination = L'\0';
+	}
+	return aoDestination;
 }
 
 
