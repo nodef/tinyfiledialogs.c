@@ -3486,21 +3486,21 @@ static int detectPresence( char const * aExecutable )
 
 static char * getVersion( char const * aExecutable ) /*version must be first numeral*/
 {
-		static char lBuff[MAX_PATH_OR_CMD] ;
-		char lTestedString[MAX_PATH_OR_CMD] ;
-		FILE * lIn ;
-		char * lTmp ;
+	static char lBuff[MAX_PATH_OR_CMD] ;
+	char lTestedString[MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+	char * lTmp ;
 
 	strcpy( lTestedString , aExecutable ) ;
 	strcat( lTestedString , " --version" ) ;
 
 	lIn = ( FILE * ) popen( lTestedString , "r" ) ;
-		lTmp = fgets( lBuff , sizeof( lBuff ) , lIn ) ;
-		pclose( lIn ) ;
+	lTmp = fgets( lBuff , sizeof( lBuff ) , lIn ) ;
+	pclose( lIn ) ;
 
-		lTmp += strcspn(lTmp,"0123456789");
-		 /* printf("lTmp:%s\n", lTmp); */
-		return lTmp ;
+	lTmp += strcspn(lTmp,"0123456789");
+	 /* printf("lTmp:%s\n", lTmp); */
+	return lTmp ;
 }
 
 
@@ -3524,20 +3524,20 @@ static int * getMajorMinorPatch( char const * aExecutable )
 
 static int tryCommand( char const * aCommand )
 {
-		char lBuff[MAX_PATH_OR_CMD] ;
-		FILE * lIn ;
+	char lBuff[MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
 
-		lIn = ( FILE * ) popen( aCommand , "r" ) ;
-		if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
-		{       /* present */
-				pclose( lIn ) ;
-				return 1 ;
-		}
-		else
-		{
-				pclose( lIn ) ;
-				return 0 ;
-		}
+	lIn = ( FILE * ) popen( aCommand , "r" ) ;
+	if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
+	{       /* present */
+			pclose( lIn ) ;
+			return 1 ;
+	}
+	else
+	{
+			pclose( lIn ) ;
+			return 0 ;
+	}
 
 }
 
@@ -4394,8 +4394,8 @@ notify=dbus.Interface(notif,'org.freedesktop.Notifications');\nexcept:\n\tprint(
 
 static void sigHandler(int signum)
 {
-    FILE * lIn ;
-    if ( ( lIn = ( FILE * ) popen( "pactl unload-module module-sine" , "r" ) ) )
+    FILE * lIn = ( FILE * ) popen( "pactl unload-module module-sine" , "r" );
+    if ( lIn )
     {
         pclose( lIn ) ;
     }
@@ -4461,9 +4461,10 @@ void tinyfd_beep(void)
 
     if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
 
-    if ( ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
+	lIn = ( FILE * ) popen( lDialogString , "r" ) ;
+    if ( lIn )
     {
-            pclose( lIn ) ;
+		pclose( lIn ) ;
     }
 
     if ( pactlPresent() )
@@ -5427,7 +5428,8 @@ my \\$notificationsObject = \\$notificationsService->get_object('/org/freedeskto
 
 		if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
 
-		if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
+		lIn = ( FILE * ) popen( lDialogString , "r" ) ;
+		if ( ! lIn )
 		{
 				free(lDialogString);
 				return 0 ;
@@ -5676,7 +5678,8 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 
 		if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
 
-		if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
+		lIn = ( FILE * ) popen( lDialogString , "r" ) ;
+		if ( ! lIn )
 		{
 				free(lDialogString);
 				return 0 ;
@@ -6698,8 +6701,10 @@ char * tinyfd_saveFileDialog(
 				return p ;
 		}
 
-		if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-	if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
+	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
+	
+	lIn = ( FILE * ) popen( lDialogString , "r" ) ;
+	if ( ! lIn )
 	{
 		return NULL ;
 	}
@@ -7243,7 +7248,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 
 	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-	if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
+	lIn = ( FILE * ) popen( lDialogString , "r" ) ;
+	if ( ! lIn )
 	{
 				free(lBuff);
 				lBuff = NULL;
@@ -7594,7 +7600,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
 				return p ;
 		}
 	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-	if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
+	lIn = ( FILE * ) popen( lDialogString , "r" ) ;
+	if ( ! lIn )
 	{
 		return NULL ;
 	}
@@ -7867,7 +7874,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 
 		if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-		if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
+		lIn = ( FILE * ) popen( lDialogString , "r" ) ;
+		if ( ! lIn )
 		{
 				return NULL ;
 	}
