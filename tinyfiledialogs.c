@@ -2782,7 +2782,8 @@ static char * openFileDialogWinConsole(
 		/* printf( "lDialogString: %s\n" , lDialogString ) ; */
 		system( lDialogString ) ;
 
-		if (!(lIn = fopen(lFilterPatterns, "r")))
+		lIn = ( FILE * ) fopen(lFilterPatterns, "r");
+		if ( ! lIn )
 		{
 				remove(lFilterPatterns);
 				return NULL;
