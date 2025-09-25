@@ -2431,7 +2431,7 @@ static int dialogPresent(void)
 	if (!tinyfd_allowCursesDialogs) return 0;
 	if (lDialogPresent < 0)
 	{
-		lIn = _popen("where dialog.exe", "r");
+		lIn = (FILE *) _popen("where dialog.exe", "r");
 		if ( ! lIn )
 		{
 				lDialogPresent = 0 ;
