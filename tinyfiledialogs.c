@@ -1968,7 +1968,9 @@ wchar_t * tinyfd_selectFolderDialogW(
 		bInfo.lpszTitle = aTitle && wcslen(aTitle) ? aTitle : NULL;
 		if (lHResult == S_OK || lHResult == S_FALSE)
 		{
+#ifndef __DMC__
 				bInfo.ulFlags = BIF_USENEWUI;
+#endif
 		}
 		bInfo.lpfn = BrowseCallbackProcW;
 		bInfo.lParam = (LPARAM)aDefaultPath;
