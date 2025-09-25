@@ -573,7 +573,7 @@ static void replaceChr(char * aString, char aOldChr, char aNewChr)
 	if (aOldChr == aNewChr) return;
 
 	p = aString;
-	while ((p = strchr(p, aOldChr)))
+	while ( ( p = strchr ( p , aOldChr ) ) )
 	{
 		*p = aNewChr;
 		p++;
@@ -722,7 +722,8 @@ static void wipefileW(wchar_t const * aFilename)
 {
 	int i;
 	FILE * lIn;
-#if (defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)) || defined(__BORLANDC__) || defined(__WATCOMC__)
+#if (defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3))
+	|| defined(__BORLANDC__) || defined(__WATCOMC__) || defined(__DMC__)
 	struct _stat st;
 	if (_wstat(aFilename, &st) == 0)
 #else
