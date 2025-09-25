@@ -540,7 +540,7 @@ static int powershellPresent(void)
 
 static int windowsVersion(void)
 {
-#if ( !defined(__MINGW32__) || defined(__MINGW64_VERSION_MAJOR) ) || !defined(__DMC__)
+#if ( !defined(__MINGW32__) || defined(__MINGW64_VERSION_MAJOR) ) && !defined(__DMC__)
 	typedef LONG NTSTATUS  ;
 	typedef NTSTATUS(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
 	HMODULE hMod;
