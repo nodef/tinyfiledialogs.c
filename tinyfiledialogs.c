@@ -1572,17 +1572,18 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 #if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
 				lDialogStringLen,
 #endif
-								L"%ls\\tinyfd.txt", _wgetenv(L"TEMP"));
-				/* wprintf(L"lDialogString: %ls\n", lDialogString); */
+				L"%ls\\tinyfd.txt", _wgetenv(L"TEMP"));
+		/* wprintf(L"lDialogString: %ls\n", lDialogString); */
 #ifdef TINYFD_NOCCSUNICODE
-				if (!(lIn = _wfopen(lDialogString, L"r")))
+		lIn = ( FILE * ) _wfopen(lDialogString, L"r") ;
 #else
-				if (!(lIn = _wfopen(lDialogString, L"rt, ccs=UNICODE"))) /*or ccs=UTF-16LE*/
+		lIn = ( FILE * ) _wfopen(lDialogString, L"rt, ccs=UNICODE") /*or ccs=UTF-16LE*/
 #endif
-				{
-				_wremove(lDialogString);
-				free(lDialogString);
-				return NULL;
+		if ( ! lIn )
+		{
+			_wremove(lDialogString);
+			free(lDialogString);
+			return NULL;
 		}
 
 				memset(lBuff, 0, MAX_PATH_OR_CMD * sizeof(wchar_t) );
