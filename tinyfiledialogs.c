@@ -88,6 +88,7 @@ misrepresented as being the original software.
  #include <windows.h>
  #include <commdlg.h>
  #include <shlobj.h>
+ #include <shlobj_core.h>
  #include <conio.h>
  #include <direct.h>
  #define TINYFD_NOCCSUNICODE
@@ -1586,7 +1587,7 @@ name = 'txt_input' value = '' style = 'float:left;width:100%' ><BR>\n\
 			return NULL;
 		}
 
-				memset(lBuff, 0, MAX_PATH_OR_CMD * sizeof(wchar_t) );
+		memset(lBuff, 0, MAX_PATH_OR_CMD * sizeof(wchar_t) );
 
 #ifdef TINYFD_NOCCSUNICODE
 				fgets((char *)lBuff, 2*MAX_PATH_OR_CMD, lIn);
