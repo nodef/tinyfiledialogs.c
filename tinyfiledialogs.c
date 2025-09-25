@@ -395,7 +395,7 @@ static int fileExists( char const * aFilePathAndName )
 	{
 			return 0 ;
 	}
-	lIn = fopen( aFilePathAndName , "r" ) ;
+	lIn = ( FILE * ) fopen( aFilePathAndName , "r" ) ;
 	if ( ! lIn )
 	{
 			return 0 ;
@@ -730,7 +730,7 @@ static void wipefileW(wchar_t const * aFilename)
 	if (_wstat64(aFilename, &st) == 0)
 #endif
 	{
-		lIn = (FILE *) _wfopen(aFilename, L"w");
+		lIn = ( FILE * ) _wfopen(aFilename, L"w");
 		if ( lIn )
 		{
 			for (i = 0; i < st.st_size; i++)
@@ -938,7 +938,7 @@ static int fileExists(char const * aFilePathAndName)
 		}
 		else
 		{
-				lIn = fopen(aFilePathAndName, "r");
+				lIn = ( FILE * ) fopen(aFilePathAndName, "r");
 				if (!lIn)
 				{
 						return 0;
@@ -1283,7 +1283,7 @@ int tinyfd_notifyPopupW(
 #endif
 		L"%ls\\tinyfd.hta", _wgetenv(L"TEMP"));
 
-	lIn = _wfopen(lDialogString, L"w");
+	lIn = ( FILE * ) _wfopen(lDialogString, L"w");
 	if (!lIn)
 	{
 		free(lDialogString);
@@ -1408,7 +1408,7 @@ wchar_t * tinyfd_inputBoxW(
 #endif
 				L"%ls\\tinyfd.hta", _wgetenv(L"TEMP"));
 		}
-		lIn = _wfopen(lDialogString, L"w");
+		lIn = ( FILE * ) _wfopen(lDialogString, L"w");
 		if (!lIn)
 		{
 				free(lDialogString);
@@ -2431,7 +2431,7 @@ static int dialogPresent(void)
 	if (!tinyfd_allowCursesDialogs) return 0;
 	if (lDialogPresent < 0)
 	{
-		lIn = (FILE *) _popen("where dialog.exe", "r");
+		lIn = ( FILE * ) _popen("where dialog.exe", "r");
 		if ( ! lIn )
 		{
 				lDialogPresent = 0 ;
@@ -3454,7 +3454,7 @@ static int detectPresence( char const * aExecutable )
 
    strcat( lTestedString , aExecutable ) ;
    strcat( lTestedString, " 2>/dev/null ");
-   lIn = popen( lTestedString , "r" ) ;
+   lIn = ( FILE * ) popen( lTestedString , "r" ) ;
    if ( ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
 	&& ( ! strchr( lBuff , ':' ) ) && ( strncmp(lBuff, "no ", 3) ) )
    {   /* present */
@@ -3494,7 +3494,7 @@ static char * getVersion( char const * aExecutable ) /*version must be first num
 	strcpy( lTestedString , aExecutable ) ;
 	strcat( lTestedString , " --version" ) ;
 
-	lIn = popen( lTestedString , "r" ) ;
+	lIn = ( FILE * ) popen( lTestedString , "r" ) ;
 		lTmp = fgets( lBuff , sizeof( lBuff ) , lIn ) ;
 		pclose( lIn ) ;
 
@@ -3527,7 +3527,7 @@ static int tryCommand( char const * aCommand )
 		char lBuff[MAX_PATH_OR_CMD] ;
 		FILE * lIn ;
 
-		lIn = popen( aCommand , "r" ) ;
+		lIn = ( FILE * ) popen( aCommand , "r" ) ;
 		if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
 		{       /* present */
 				pclose( lIn ) ;
@@ -3814,7 +3814,7 @@ static int pactlPresent( void )
 		lPactlPresent = detectPresence("pactl") ;
 		if ( lPactlPresent )
 		{
-			lIn = popen( "pactl info | grep -iF pulseaudio" , "r" ) ;
+			lIn = ( FILE * ) popen( "pactl info | grep -iF pulseaudio" , "r" ) ;
 			if ( ! (fgets( lBuff , sizeof( lBuff ) , lIn ) && ! strstr(lBuff, "PipeWire") ) )
 			{
 				lPactlPresent = 0 ;
@@ -3956,7 +3956,7 @@ static int perlPresent(void)
 	  lPerlPresent = detectPresence("perl") ;
 	  if (lPerlPresent)
 	  {
-		 lIn = popen("perl -MNet::DBus -e \"Net::DBus->session->get_service('org.freedesktop.Notifications')\" 2>&1", "r");
+		 lIn = ( FILE * ) popen("perl -MNet::DBus -e \"Net::DBus->session->get_service('org.freedesktop.Notifications')\" 2>&1", "r");
 		 if (fgets(lBuff, sizeof(lBuff), lIn) == NULL)
 		 {
 			lPerlPresent = 2;
@@ -3980,7 +3980,7 @@ static int afplayPresent(void)
 				lAfplayPresent = detectPresence("afplay") ;
 				if ( lAfplayPresent )
 				{
-						lIn = popen( "test -e /System/Library/Sounds/Ping.aiff || echo Ping" , "r" ) ;
+						lIn = ( FILE * ) popen( "test -e /System/Library/Sounds/Ping.aiff || echo Ping" , "r" ) ;
 						if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
 						{
 								lAfplayPresent = 2 ;
@@ -4039,7 +4039,7 @@ static int dunstifyPresent(void)
 		lDunstifyPresent = detectPresence( "dunstify" ) ;
 		if ( lDunstifyPresent )
 		{
-			lIn = popen( "dunstify -s" , "r" ) ;
+			lIn = ( FILE * ) popen( "dunstify -s" , "r" ) ;
 			lTmp = fgets( lBuff , sizeof( lBuff ) , lIn ) ;
 			pclose( lIn ) ;
 			/* printf("lTmp:%s\n", lTmp); */
@@ -4063,7 +4063,7 @@ static int dunstPresent(void)
 		lDunstPresent = detectPresence( "dunst" ) ;
 		if ( lDunstPresent )
 		{
-			lIn = popen( "ps -e | grep dunst | grep -v grep" , "r" ) ; /* add "| wc -l" to receive the number of lines */
+			lIn = ( FILE * ) popen( "ps -e | grep dunst | grep -v grep" , "r" ) ; /* add "| wc -l" to receive the number of lines */
 			lTmp = fgets( lBuff , sizeof( lBuff ) , lIn ) ;
 			pclose( lIn ) ;
 			/* if ( lTmp ) printf("lTmp:%s\n", lTmp); */
@@ -4126,7 +4126,7 @@ int tfd_xpropPresent(void)
 
 	if ( ! lXpropReady )
 	{	/* xwayland Debian issue reported by Kay F. Jahnke and solved with his help */
-		lIn = popen( "xprop -root 32x '	$0' _NET_ACTIVE_WINDOW" , "r" ) ;
+		lIn = ( FILE * ) popen( "xprop -root 32x '	$0' _NET_ACTIVE_WINDOW" , "r" ) ;
 		if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
 		{
 			if ( ! strstr( lBuff , "not found" ) )
@@ -4175,7 +4175,7 @@ int tfd_zenity3Present(void)
 				lZenity3Present = 0 ;
 				if ( tfd_zenityPresent() )
 				{
-						lIn = popen( "zenity --version" , "r" ) ;
+						lIn = ( FILE * ) popen( "zenity --version" , "r" ) ;
 						if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
 						{
 								if ( atoi(lBuff) >= 3 )
@@ -4226,7 +4226,7 @@ int tfd_kdialogPresent(void)
         lKdialogPresent = detectPresence("kdialog") ;
         if ( lKdialogPresent && !getenv("SSH_TTY") )
         {
-            lIn = popen( "kdialog --attach 2>&1" , "r" ) ;
+            lIn = ( FILE * ) popen( "kdialog --attach 2>&1" , "r" ) ;
             if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
             {
                 if ( ! strstr( "Unknown" , lBuff ) )
@@ -4240,7 +4240,7 @@ int tfd_kdialogPresent(void)
             if (lKdialogPresent == 2)
             {
                 lKdialogPresent = 1 ;
-                lIn = popen( "kdialog --passivepopup 2>&1" , "r" ) ;
+                lIn = ( FILE * ) popen( "kdialog --passivepopup 2>&1" , "r" ) ;
                 if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
                 {
                     if ( ! strstr( "Unknown" , lBuff ) )
@@ -4267,7 +4267,7 @@ static int osx9orBetter(void)
 		if ( lOsx9orBetter < 0 )
 		{
 				lOsx9orBetter = 0 ;
-				lIn = popen( "osascript -e 'set osver to system version of (system info)'" , "r" ) ;
+				lIn = ( FILE * ) popen( "osascript -e 'set osver to system version of (system info)'" , "r" ) ;
 				V = 0 ;
 				if ( ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
 						&& ( 2 == sscanf(lBuff, "%d.%d", &V, &v) ) )
@@ -4395,7 +4395,7 @@ notify=dbus.Interface(notif,'org.freedesktop.Notifications');\nexcept:\n\tprint(
 static void sigHandler(int signum)
 {
     FILE * lIn ;
-    if ( ( lIn = popen( "pactl unload-module module-sine" , "r" ) ) )
+    if ( ( lIn = ( FILE * ) popen( "pactl unload-module module-sine" , "r" ) ) )
     {
         pclose( lIn ) ;
     }
@@ -4461,7 +4461,7 @@ void tinyfd_beep(void)
 
     if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
 
-    if ( ( lIn = popen( lDialogString , "r" ) ) )
+    if ( ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
     {
             pclose( lIn ) ;
     }
@@ -5427,7 +5427,7 @@ my \\$notificationsObject = \\$notificationsService->get_object('/org/freedeskto
 
 		if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
 
-		if ( ! ( lIn = popen( lDialogString , "r" ) ) )
+		if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
 		{
 				free(lDialogString);
 				return 0 ;
@@ -5676,7 +5676,7 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 
 		if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
 
-		if ( ! ( lIn = popen( lDialogString , "r" ) ) )
+		if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
 		{
 				free(lDialogString);
 				return 0 ;
@@ -6212,7 +6212,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 
 		if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-		lIn = popen( lDialogString , "r" );
+		lIn = ( FILE * ) popen( lDialogString , "r" );
 		if ( ! lIn  )
 		{
 				if ( fileExists("/tmp/tinyfd.txt") )
@@ -6699,7 +6699,7 @@ char * tinyfd_saveFileDialog(
 		}
 
 		if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-	if ( ! ( lIn = popen( lDialogString , "r" ) ) )
+	if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
 	{
 		return NULL ;
 	}
@@ -7243,7 +7243,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 
 	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-	if ( ! ( lIn = popen( lDialogString , "r" ) ) )
+	if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
 	{
 				free(lBuff);
 				lBuff = NULL;
@@ -7594,7 +7594,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 				return p ;
 		}
 	if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-	if ( ! ( lIn = popen( lDialogString , "r" ) ) )
+	if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
 	{
 		return NULL ;
 	}
@@ -7867,7 +7867,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		}
 
 		if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-		if ( ! ( lIn = popen( lDialogString , "r" ) ) )
+		if ( ! ( lIn = ( FILE * ) popen( lDialogString , "r" ) ) )
 		{
 				return NULL ;
 	}
