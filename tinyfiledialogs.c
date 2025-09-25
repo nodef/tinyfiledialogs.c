@@ -831,36 +831,35 @@ static void Hex2RGBW(wchar_t const aHexRGB[8], unsigned char aoResultRGB[3])
 static void RGB2HexW( unsigned char const aRGB[3], wchar_t aoResultHexRGB[8])
 {
 #if (defined(__cplusplus ) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__clang__)
-		wchar_t const * const lPrintFormat = L"#%02hhx%02hhx%02hhx";
+	wchar_t const * const lPrintFormat = L"#%02hhx%02hhx%02hhx";
 #else
-		wchar_t const * const lPrintFormat = L"#%02hx%02hx%02hx";
+	wchar_t const * const lPrintFormat = L"#%02hx%02hx%02hx";
 #endif
 
-		if (aoResultHexRGB)
+	if (aoResultHexRGB)
+	{
+		if (aRGB)
 		{
-				if (aRGB)
-				{
-						/* wprintf(L"aoResultHexRGB %s\n", aoResultHexRGB); */
+			/* wprintf(L"aoResultHexRGB %s\n", aoResultHexRGB); */
 #if !defined(__BORLANDC__) && !defined(__TINYC__) && !(defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
-										swprintf(aoResultHexRGB, 8, lPrintFormat, aRGB[0], aRGB[1], aRGB[2]);
+			swprintf(aoResultHexRGB, 8, lPrintFormat, aRGB[0], aRGB[1], aRGB[2]);
 #else
-										swprintf(aoResultHexRGB, lPrintFormat, aRGB[0], aRGB[1], aRGB[2]);
+			swprintf(aoResultHexRGB, lPrintFormat, aRGB[0], aRGB[1], aRGB[2]);
 #endif
-
-				}
-				else
-				{
-						aoResultHexRGB[0] = 0;
-						aoResultHexRGB[1] = 0;
-						aoResultHexRGB[2] = 0;
-				}
 		}
+		else
+		{
+			aoResultHexRGB[0] = 0;
+			aoResultHexRGB[1] = 0;
+			aoResultHexRGB[2] = 0;
+		}
+	}
 }
 
 
 static int dirExists(char const * aDirPath)
 {
-#if (defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)) || defined(__BORLANDC__) || defined(__WATCOMC__)
+#if (defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64__) && (__MINGW32_MAJOR_VERSION <= 3)) || defined(__BORLANDC__) || defined(__WATCOMC__) || defined(__DMC__)
 	struct _stat lInfo;
 #else
 	struct __stat64 lInfo;
