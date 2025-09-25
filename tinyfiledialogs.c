@@ -730,7 +730,7 @@ static void wipefileW(wchar_t const * aFilename)
 	if (_wstat64(aFilename, &st) == 0)
 #endif
 	{
-		lIn = (FILE *) _wfopen(aFilename, L"w")
+		lIn = (FILE *) _wfopen(aFilename, L"w");
 		if ( lIn )
 		{
 			for (i = 0; i < st.st_size; i++)
