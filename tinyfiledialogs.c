@@ -88,7 +88,6 @@ misrepresented as being the original software.
  #include <windows.h>
  #include <commdlg.h>
  #include <shlobj.h>
- #include <shlobj_core.h>
  #include <conio.h>
  #include <direct.h>
  #define TINYFD_NOCCSUNICODE
