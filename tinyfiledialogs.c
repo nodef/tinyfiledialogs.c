@@ -2716,7 +2716,8 @@ static char * saveFileDialogWinConsole(
 		/* printf( "lDialogString: %s\n" , lDialogString ) ; */
 		system( lDialogString ) ;
 
-		if (!(lIn = fopen(lPathAndFile, "r")))
+		lIn = ( FILE * ) fopen(lPathAndFile, "r");
+		if ( ! lIn )
 		{
 				remove(lPathAndFile);
 				return NULL;
