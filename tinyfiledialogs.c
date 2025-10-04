@@ -5718,13 +5718,13 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 				strcat( lDialogString , aIconType ) ;
 				strcat( lDialogString , "'" ) ;
 			}
-			strcat( lDialogString , " \"" ) ;
 			if ( aTitle && strlen(aTitle) )
 			{
 				strcat( lDialogString , " --title '" ) ;
 				strcat(lDialogString, aTitle) ;
 				strcat( lDialogString , "'" ) ;
 			}
+			strcat( lDialogString , " \"" ) ;
 			if ( aMessage && strlen(aMessage) )
 			{
 				tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
