@@ -199,7 +199,7 @@ char tinyfd_needs[] = "\
 
 static int getenvDISPLAY(void)
 {
-		/* return tinyfd_assumeGraphicDisplay || getenv("DISPLAY") || getenv("WAYLAND_DISPLAY") ; */
+	/* return tinyfd_assumeGraphicDisplay || getenv("DISPLAY") || getenv("WAYLAND_DISPLAY") ; */
 	static int lReturnValue = -1 ;
 
 	if ( lReturnValue < 0 )
@@ -3426,6 +3426,18 @@ int tfd_isDarwin(void)
 }
 
 
+int tfd_isHaiku(void)
+{
+		static int lsIsHaiku = -1 ;
+		struct utsname lUtsname ;
+		if ( lsIsHaiku < 0 )
+		{
+				lsIsHaiku = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Haiku") ;
+		}
+		return lsIsHaiku ;
+}
+
+
 static int dirExists( char const * aDirPath )
 {
 	DIR * lDir ;
@@ -3786,9 +3798,22 @@ static int whiptailPresent(void)
 
 static int graphicMode(void)
 {
-		return !( tinyfd_forceConsole && (isTerminalRunning() || terminalName()) )
-						&& ( getenvDISPLAY()
-						|| (tfd_isDarwin() && (!getenv("SSH_TTY") || getenvDISPLAY() ) ) ) ;
+	static int lGraphicMode = -1 ;
+	
+	if ( lGraphicMode < 0 )
+	{
+		if ( getenvDISPLAY() ) lGraphicMode = 1 ;
+		else if ( tfd_isDarwin() || tfd_isHaiku() )
+		{
+			if ( getenv("SSH_TTY") ) lGraphicMode = 0 ;
+			else lGraphicMode = 1 ;
+		}
+		else lGraphicMode = 0 ;
+
+		if ( tinyfd_forceConsole && ( isTerminalRunning() || terminalName() ) ) lGraphicMode = 0 ;
+	}	
+	
+	return lGraphicMode ;
 }
 
 
@@ -4073,6 +4098,17 @@ static int dunstPresent(void)
 		}
 	}
 	return lDunstPresent && graphicMode( ) ;
+}
+
+
+int tfd_boxerPresent(void)
+{
+		static int lBoxerPresent = -1 ;
+		if ( lBoxerPresent < 0 )
+		{
+				lBoxerPresent = detectPresence("boxer") ;
+		}
+		return lBoxerPresent && graphicMode( ) ;
 }
 
 
@@ -4654,13 +4690,14 @@ int tinyfd_messageBox(
 						strcat( lDialogString , ";if [ $? = 0 ];then echo 1;else echo 0;fi");
 				}
 		}
-		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
+		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent()
+				|| tfd_qarmaPresent() || tfd_boxerPresent() )
 		{
 				if ( tfd_zenityPresent() )
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
 						strcpy( lDialogString , "szAnswer=$(zenity" ) ;
-												if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
+						if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
 						{
 								strcat(lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
@@ -4675,15 +4712,21 @@ int tinyfd_messageBox(
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return 1;}
 						strcpy( lDialogString , "szAnswer=$(shellementary" ) ;
 				}
-				else
+				else if ( tfd_qarmaPresent() )
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
 						strcpy( lDialogString , "szAnswer=$(qarma" ) ;
-												if ( !getenv("SSH_TTY") && tfd_xpropPresent() )
+						if ( !getenv("SSH_TTY") && tfd_xpropPresent() )
 						{
 								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
 				}
+				else if ( tfd_boxerPresent() )
+				{
+						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"boxer");return 1;}
+						strcpy( lDialogString , "szAnswer=$(boxer" ) ;
+				}
+				else ;
 				strcat(lDialogString, " --");
 
 				if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
@@ -4722,7 +4765,8 @@ int tinyfd_messageBox(
 				if (aMessage && strlen(aMessage)) strcat(lDialogString, aMessage) ;
 				strcat(lDialogString, "\"") ;
 
-				if ( (tfd_zenity3Present() >= 3) || (!tfd_zenityPresent() && (tfd_shellementaryPresent() || tfd_qarmaPresent()) ) )
+				if ( (tfd_zenity3Present() >= 3) || (!tfd_zenityPresent() && (tfd_shellementaryPresent()
+					|| tfd_qarmaPresent() || tfd_boxerPresent()) ) )
 				{
 						strcat( lDialogString , " --icon-name=dialog-" ) ;
 						if ( aIconType && (! strcmp( "question" , aIconType )
@@ -5800,7 +5844,8 @@ char * tinyfd_inputBox(
 				strcat( lDialogString ,
 						");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
 		}
-		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
+		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent()
+				|| tfd_qarmaPresent() || tfd_boxerPresent() )
 		{
 				if ( tfd_zenityPresent() )
 				{
@@ -5821,7 +5866,7 @@ char * tinyfd_inputBox(
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char *)1;}
 						strcpy( lDialogString , "szAnswer=$(shellementary" ) ;
 				}
-				else
+				else if ( tfd_qarmaPresent() )
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char *)1;}
 						strcpy( lDialogString ,  "szAnswer=$(qarma" ) ;
@@ -5830,6 +5875,13 @@ char * tinyfd_inputBox(
 								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
 				}
+				else if ( tfd_boxerPresent() )
+				{
+						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"boxer");return (char *)1;}
+						strcpy( lDialogString ,  "szAnswer=$(boxer" ) ;
+				}
+				else ;
+				
 				strcat( lDialogString ," --entry" ) ;
 
 				strcat(lDialogString, " --title=\"") ;
@@ -6390,7 +6442,8 @@ char * tinyfd_saveFileDialog(
 						strcat(lDialogString, "\"") ;
 				}
 		}
-		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
+		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent()
+				|| tfd_qarmaPresent() || tfd_boxerPresent() )
 		{
 				if ( tfd_zenityPresent() )
 				{
@@ -6411,7 +6464,7 @@ char * tinyfd_saveFileDialog(
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char *)1;}
 						strcpy( lDialogString , "shellementary" ) ;
 				}
-				else
+				else if ( tfd_qarmaPresent() )
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char *)1;}
 						strcpy( lDialogString , "qarma" ) ;
@@ -6420,6 +6473,13 @@ char * tinyfd_saveFileDialog(
 								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
 				}
+				else if ( tfd_boxerPresent() )
+				{
+						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"boxer");return (char *)1;}
+						strcpy( lDialogString , "boxer" ) ;
+				}
+				else ;
+				
 				strcat(lDialogString, " --file-selection --save --confirm-overwrite" ) ;
 
 				strcat(lDialogString, " --title=\"") ;
@@ -6917,7 +6977,8 @@ char * tinyfd_openFileDialog(
 						strcat(lDialogString, "\"") ;
 				}
 		}
-		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
+		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent()
+				|| tfd_qarmaPresent() || tfd_boxerPresent() )
 		{
 				if ( tfd_zenityPresent() )
 				{
@@ -6938,7 +6999,7 @@ char * tinyfd_openFileDialog(
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char *)1;}
 						strcpy( lDialogString , "shellementary" ) ;
 				}
-				else
+				else if ( tfd_qarmaPresent() )
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char *)1;}
 						strcpy( lDialogString , "qarma" ) ;
@@ -6947,6 +7008,13 @@ char * tinyfd_openFileDialog(
 								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
 				}
+				else if ( tfd_boxerPresent() )
+				{
+						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"boxer");return (char *)1;}
+						strcpy( lDialogString , "boxer" ) ;
+				}
+				else;
+				
 				strcat( lDialogString , " --file-selection" ) ;
 
 				if ( aAllowMultipleSelects )
@@ -7392,13 +7460,14 @@ char * tinyfd_selectFolderDialog(
 						strcat(lDialogString, "\"") ;
 				}
 		}
-		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
+		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent()
+				|| tfd_qarmaPresent() || tfd_boxerPresent() )
 		{
 				if ( tfd_zenityPresent() )
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
 						strcpy( lDialogString , "zenity" ) ;
-												if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
+						if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
 						{
 								strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
@@ -7413,15 +7482,22 @@ char * tinyfd_selectFolderDialog(
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char *)1;}
 						strcpy( lDialogString , "shellementary" ) ;
 				}
-				else
+				else if ( tfd_qarmaPresent() )
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char *)1;}
 						strcpy( lDialogString , "qarma" ) ;
-												if ( !getenv("SSH_TTY") && tfd_xpropPresent() )
+						if ( !getenv("SSH_TTY") && tfd_xpropPresent() )
 						{
 								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
 				}
+				else if ( tfd_boxerPresent() )
+				{
+						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"boxer");return (char *)1;}
+						strcpy( lDialogString , "boxer" ) ;
+				}
+				else ;
+
 				strcat( lDialogString , " --file-selection --directory" ) ;
 
 				strcat(lDialogString, " --title=\"") ;
@@ -7725,7 +7801,8 @@ to set mycolor to choose color default color {");
 						strcat(lDialogString, "\"") ;
 				}
 		}
-		else if ( tfd_zenity3Present() || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
+		else if ( tfd_zenity3Present() || tfd_matedialogPresent() || tfd_shellementaryPresent()
+				|| tfd_qarmaPresent() || tfd_boxerPresent() )
 		{
 				lWasZenity3 = 1 ;
 				if ( tfd_zenity3Present() )
@@ -7747,7 +7824,7 @@ to set mycolor to choose color default color {");
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char *)1;}
 						strcpy( lDialogString , "shellementary" ) ;
 				}
-				else
+				else if ( tfd_qarmaPresent() )
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char *)1;}
 						strcpy( lDialogString , "qarma" ) ;
@@ -7756,6 +7833,13 @@ to set mycolor to choose color default color {");
 								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
 				}
+				else if ( tfd_boxerPresent() )
+				{
+						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"boxer");return (char *)1;}
+						strcpy( lDialogString , "boxer" ) ;
+				}
+				else ;
+				
 				strcat( lDialogString , " --color-selection --show-palette" ) ;
 				sprintf( lDialogString + strlen(lDialogString), " --color=%s" , lDefaultHexRGB ) ;
 
