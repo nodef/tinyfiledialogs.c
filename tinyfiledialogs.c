@@ -2995,19 +2995,17 @@ int tinyfd_notifyPopup(
 		char const * aMessage , /* NULL or "" may contain \n \t */
 		char const * aIconType ) /* "info" "warning" "error" */
 {
-		if (tfd_quoteDetected(aTitle)) return tinyfd_notifyPopup("INVALID TITLE WITH QUOTES", aMessage, aIconType);
-		if (tfd_quoteDetected(aMessage)) return tinyfd_notifyPopup(aTitle, "INVALID MESSAGE WITH QUOTES", aIconType);
+	if (tfd_quoteDetected(aTitle)) return tinyfd_notifyPopup("INVALID TITLE WITH QUOTES", aMessage, aIconType);
+	if (tfd_quoteDetected(aMessage)) return tinyfd_notifyPopup(aTitle, "INVALID MESSAGE WITH QUOTES", aIconType);
 
-	if ( powershellPresent() && (!tinyfd_forceConsole || !(
-			GetConsoleWindow() ||
-			dialogPresent()))
-						&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
+	if ( powershellPresent()
+		&& ( !tinyfd_forceConsole || !(GetConsoleWindow() || dialogPresent()) )
+		&& (!getenv("SSH_CLIENT") || getenvDISPLAY()) )
 	{
-			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return 1;}
-			return notifyWinGui(aTitle, aMessage, aIconType);
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return 1;}
+		return notifyWinGui(aTitle, aMessage, aIconType);
 	}
-	else
-			return tinyfd_messageBox(aTitle, aMessage, "ok" , aIconType, 0);
+	else return tinyfd_messageBox(aTitle, aMessage, "ok" , aIconType, 0);
 }
 
 
@@ -3416,19 +3414,19 @@ static char gPythonName[16];
 
 int tfd_isDarwin(void)
 {
-	static int lsIsDarwin = -1 ;
+	static int lIsDarwin = -1 ;
 	struct utsname lUtsname ;
-	if ( lsIsDarwin < 0 ) lsIsDarwin = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Darwin") ;
-	return lsIsDarwin ;
+	if ( lIsDarwin < 0 ) lIsDarwin = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Darwin") ;
+	return lIsDarwin ;
 }
 
 
 int tfd_isHaiku(void)
 {
-	static int lsIsHaiku = -1 ;
+	static int lIsHaiku = -1 ;
 	struct utsname lUtsname ;
-	if ( lsIsHaiku < 0 ) lsIsHaiku = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Haiku") ;
-	return lsIsHaiku ;
+	if ( lIsHaiku < 0 ) lIsHaiku = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Haiku") ;
+	return lIsHaiku ;
 }
 
 
@@ -3961,6 +3959,17 @@ static int notifysendPresent(void)
 		lNotifysendPresent = detectPresence("notify-send") ;
 	}
 	return lNotifysendPresent && graphicMode( ) ;
+}
+
+
+static int notifyPresent(void)
+{
+	static int lNotifyPresent = -1 ;
+	if ( lNotifyPresent < 0 )
+	{
+		lNotifyPresent = detectPresence("notify") ;
+	}
+	return lNotifyPresent && graphicMode( ) ;
 }
 
 
@@ -4778,7 +4787,7 @@ int tinyfd_messageBox(
 				strcat(lDialogString, "\"") ;
 
 				if ( (tfd_zenity3Present() >= 3) || (!tfd_zenityPresent() && (tfd_shellementaryPresent()
-					|| tfd_qarmaPresent() /*|| tfd_boxerPresent()*/) ) )
+					|| tfd_qarmaPresent() /*|| tfd_shantyPresent() || tfd_boxerPresent()*/) ) )
 				{
 						strcat( lDialogString , " --icon-name=dialog-" ) ;
 						if ( aIconType && (! strcmp( "question" , aIconType )
@@ -5699,14 +5708,23 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 			}
 			strcat( lDialogString , "\"" ) ;
 		}
-		else if ( (tfd_zenity3Present()>=5) )
+		else if ( (tfd_zenity3Present()>=5) || tfd_boxerPresent() )
 		{
 				/* zenity 2.32 & 3.14 has the notification but with a bug: it doesnt return from it */
 				/* zenity 3.8 show the notification as an alert ok cancel box */
 				/* zenity 3.44 doesn't have the notification (3.42 has it) */
-				if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
-				strcpy( lDialogString , "zenity --notification");
-
+				if ( tfd_zenity3Present() )
+				{
+					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
+					strcpy( lDialogString , "zenity --notification");
+				}
+				else if ( tfd_boxerPresent() )
+				{
+					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"boxer");return 1;}
+					strcpy( lDialogString , "boxer --notification");
+				}
+				else ;
+				
 				if ( aIconType && strlen( aIconType ) )
 				{
 						strcat( lDialogString , " --window-icon '");
@@ -5725,6 +5743,33 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 						strcat( lDialogString , aMessage ) ;
 				}
 				strcat( lDialogString , " \"" ) ;
+		}
+		else if ( notifyPresent() ) /* haiku */
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
+			strcpy( lDialogString , "notify" ) ;
+			if ( aIconType && strlen(aIconType) )
+			{
+				strcat( lDialogString , " --icon '" ) ;
+				strcat( lDialogString , aIconType ) ;
+				strcat( lDialogString , "'" ) ;
+			}
+			strcat( lDialogString , " \"" ) ;
+			if ( aTitle && strlen(aTitle) )
+			{
+				strcat( lDialogString , " --title '" ) ;
+				strcat(lDialogString, aTitle) ;
+				strcat( lDialogString , "'" ) ;
+			}
+			if ( aMessage && strlen(aMessage) )
+			{
+				tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
+				tfd_replaceSubStr( aMessage , "\n" , " | " , lBuff ) ;
+				tfd_replaceSubStr( aMessage , "\t" , "  " , lBuff ) ;
+				strcat(lDialogString, lBuff) ;
+			}
+			else strcat(lDialogString, "''" ) ;
+			strcat( lDialogString , "\"" ) ;
 		}
 		else
 		{
@@ -7878,7 +7923,10 @@ to set mycolor to choose color default color {");
 				else ;
 				
 				strcat( lDialogString , " --color-selection" ) ;
-				if ( ! tfd_boxerPresent() && ! tfd_shantyPresent() ) strcat( lDialogString , " --show-palette" ) ;
+				if ( tfd_zenity3Present() || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
+				{
+					strcat( lDialogString , " --show-palette" ) ;
+				}
 				sprintf( lDialogString + strlen(lDialogString), " --color=%s" , lDefaultHexRGB ) ;
 
 				strcat(lDialogString, " --title=\"") ;
