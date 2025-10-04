@@ -4533,114 +4533,115 @@ int tinyfd_messageBox(
 		char const * aIconType , /* "info" "warning" "error" "question" */
 		int aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
 {
-		char lBuff[MAX_PATH_OR_CMD] ;
-		char * lDialogString = NULL ;
-		char * lpDialogString;
-		FILE * lIn ;
-		int lWasGraphicDialog = 0 ;
-		int lWasXterm = 0 ;
-		int lResult ;
-		char lChar ;
-		struct termios infoOri;
-		struct termios info;
-		size_t lTitleLen ;
-		size_t lMessageLen ;
+	char lBuff[MAX_PATH_OR_CMD] ;
+	char lBuff2[MAX_PATH_OR_CMD] ;
+	char * lDialogString = NULL ;
+	char * lpDialogString;
+	FILE * lIn ;
+	int lWasGraphicDialog = 0 ;
+	int lWasXterm = 0 ;
+	int lResult ;
+	char lChar ;
+	struct termios infoOri;
+	struct termios info;
+	size_t lTitleLen ;
+	size_t lMessageLen ;
 
-		lBuff[0]='\0';
+	lBuff[0]='\0';
 
-				if (tfd_quoteDetected(aTitle)) return tinyfd_messageBox("INVALID TITLE WITH QUOTES", aMessage, aDialogType, aIconType, aDefaultButton);
-				if (tfd_quoteDetected(aMessage)) return tinyfd_messageBox(aTitle, "INVALID MESSAGE WITH QUOTES", aDialogType, aIconType, aDefaultButton);
+	if (tfd_quoteDetected(aTitle)) return tinyfd_messageBox("INVALID TITLE WITH QUOTES", aMessage, aDialogType, aIconType, aDefaultButton);
+	if (tfd_quoteDetected(aMessage)) return tinyfd_messageBox(aTitle, "INVALID MESSAGE WITH QUOTES", aDialogType, aIconType, aDefaultButton);
 
-		lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
-		lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
-		if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
+	lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
+	lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
+	if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
+	{
+			lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
+	}
+
+	if ( osascriptPresent( ) )
+	{
+		if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return 1;}
+
+		strcpy( lDialogString , "osascript ");
+		if ( ! osx9orBetter() ) strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
+		strcat( lDialogString , " -e 'try' -e 'set {vButton} to {button returned} of ( display dialog \"") ;
+		if ( aMessage && strlen(aMessage) )
 		{
-				lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
+				strcat(lDialogString, aMessage) ;
 		}
-
-		if ( osascriptPresent( ) )
+		strcat(lDialogString, "\" ") ;
+		if ( aTitle && strlen(aTitle) )
 		{
-				if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return 1;}
-
-				strcpy( lDialogString , "osascript ");
-				if ( ! osx9orBetter() ) strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
-				strcat( lDialogString , " -e 'try' -e 'set {vButton} to {button returned} of ( display dialog \"") ;
-				if ( aMessage && strlen(aMessage) )
-				{
-						strcat(lDialogString, aMessage) ;
-				}
+				strcat(lDialogString, "with title \"") ;
+				strcat(lDialogString, aTitle) ;
 				strcat(lDialogString, "\" ") ;
-				if ( aTitle && strlen(aTitle) )
+		}
+		strcat(lDialogString, "with icon ") ;
+		if ( aIconType && ! strcmp( "error" , aIconType ) )
+		{
+				strcat(lDialogString, "stop " ) ;
+		}
+		else if ( aIconType && ! strcmp( "warning" , aIconType ) )
+		{
+				strcat(lDialogString, "caution " ) ;
+		}
+		else /* question or info */
+		{
+				strcat(lDialogString, "note " ) ;
+		}
+		if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
+		{
+				if ( ! aDefaultButton )
 				{
-						strcat(lDialogString, "with title \"") ;
-						strcat(lDialogString, aTitle) ;
-						strcat(lDialogString, "\" ") ;
+						strcat( lDialogString ,"default button \"Cancel\" " ) ;
 				}
-				strcat(lDialogString, "with icon ") ;
-				if ( aIconType && ! strcmp( "error" , aIconType ) )
+		}
+		else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
+		{
+				strcat( lDialogString ,"buttons {\"No\", \"Yes\"} " ) ;
+				if (aDefaultButton)
 				{
-						strcat(lDialogString, "stop " ) ;
-				}
-				else if ( aIconType && ! strcmp( "warning" , aIconType ) )
-				{
-						strcat(lDialogString, "caution " ) ;
-				}
-				else /* question or info */
-				{
-						strcat(lDialogString, "note " ) ;
-				}
-				if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
-				{
-						if ( ! aDefaultButton )
-						{
-								strcat( lDialogString ,"default button \"Cancel\" " ) ;
-						}
-				}
-				else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
-				{
-						strcat( lDialogString ,"buttons {\"No\", \"Yes\"} " ) ;
-						if (aDefaultButton)
-						{
-								strcat( lDialogString ,"default button \"Yes\" " ) ;
-						}
-						else
-						{
-								strcat( lDialogString ,"default button \"No\" " ) ;
-						}
-						strcat( lDialogString ,"cancel button \"No\"" ) ;
-				}
-				else if ( aDialogType && ! strcmp( "yesnocancel" , aDialogType ) )
-				{
-						strcat( lDialogString ,"buttons {\"No\", \"Yes\", \"Cancel\"} " ) ;
-						switch (aDefaultButton)
-						{
-								case 1: strcat( lDialogString ,"default button \"Yes\" " ) ; break;
-								case 2: strcat( lDialogString ,"default button \"No\" " ) ; break;
-								case 0: strcat( lDialogString ,"default button \"Cancel\" " ) ; break;
-						}
-						strcat( lDialogString ,"cancel button \"Cancel\"" ) ;
+						strcat( lDialogString ,"default button \"Yes\" " ) ;
 				}
 				else
 				{
-						strcat( lDialogString ,"buttons {\"OK\"} " ) ;
-						strcat( lDialogString ,"default button \"OK\" " ) ;
+						strcat( lDialogString ,"default button \"No\" " ) ;
 				}
-				strcat( lDialogString, ")' ") ;
-
-				strcat( lDialogString,
-"-e 'if vButton is \"Yes\" then' -e 'return 1'\
- -e 'else if vButton is \"OK\" then' -e 'return 1'\
- -e 'else if vButton is \"No\" then' -e 'return 2'\
- -e 'else' -e 'return 0' -e 'end if' " );
-
-				strcat( lDialogString, "-e 'on error number -128' " ) ;
-				strcat( lDialogString, "-e '0' " );
-
-				strcat( lDialogString, "-e 'end try'") ;
-				if ( ! osx9orBetter() ) strcat( lDialogString, " -e 'end tell'") ;
+				strcat( lDialogString ,"cancel button \"No\"" ) ;
 		}
-		else if ( tfd_kdialogPresent() )
+		else if ( aDialogType && ! strcmp( "yesnocancel" , aDialogType ) )
 		{
+				strcat( lDialogString ,"buttons {\"No\", \"Yes\", \"Cancel\"} " ) ;
+				switch (aDefaultButton)
+				{
+						case 1: strcat( lDialogString ,"default button \"Yes\" " ) ; break;
+						case 2: strcat( lDialogString ,"default button \"No\" " ) ; break;
+						case 0: strcat( lDialogString ,"default button \"Cancel\" " ) ; break;
+				}
+				strcat( lDialogString ,"cancel button \"Cancel\"" ) ;
+		}
+		else
+		{
+				strcat( lDialogString ,"buttons {\"OK\"} " ) ;
+				strcat( lDialogString ,"default button \"OK\" " ) ;
+		}
+		strcat( lDialogString, ")' ") ;
+
+		strcat( lDialogString,
+"-e 'if vButton is \"Yes\" then' -e 'return 1'\
+-e 'else if vButton is \"OK\" then' -e 'return 1'\
+-e 'else if vButton is \"No\" then' -e 'return 2'\
+-e 'else' -e 'return 0' -e 'end if' " );
+
+		strcat( lDialogString, "-e 'on error number -128' " ) ;
+		strcat( lDialogString, "-e '0' " );
+
+		strcat( lDialogString, "-e 'end try'") ;
+		if ( ! osx9orBetter() ) strcat( lDialogString, " -e 'end tell'") ;
+	}
+	else if ( tfd_kdialogPresent() )
+	{
 				if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return 1;}
 
 				strcpy( lDialogString , "kdialog" ) ;
@@ -5403,10 +5404,10 @@ my \\$notificationsObject = \\$notificationsService->get_object('/org/freedeskto
 				}
 				if ( aMessage && strlen(aMessage) )
 				{
-			tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
-			tfd_replaceSubStr( aMessage , "\n" , " | " , lBuff ) ;
-			tfd_replaceSubStr( aMessage , "\t" , "  " , lBuff ) ;
-						strcat(lDialogString, lBuff) ;
+					tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
+					tfd_replaceSubStr( lBuff , "\n" , " | " , lBuff2 ) ;
+					tfd_replaceSubStr( lBuff2 , "\t" , "  " , lBuff ) ;
+					strcat(lDialogString, lBuff) ;
 				}
 				strcat( lDialogString , "\"" ) ;
 		}
@@ -5709,42 +5710,6 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 			}
 			strcat( lDialogString , "\"" ) ;
 		}
-		else if ( (tfd_zenity3Present()>=5) || tfd_boxerPresent() )
-		{
-				/* zenity 2.32 & 3.14 has the notification but with a bug: it doesnt return from it */
-				/* zenity 3.8 show the notification as an alert ok cancel box */
-				/* zenity 3.44 doesn't have the notification (3.42 has it) */
-				if ( tfd_zenity3Present() )
-				{
-					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
-					strcpy( lDialogString , "zenity --notification");
-				}
-				else if ( tfd_boxerPresent() )
-				{
-					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"boxer");return 1;}
-					strcpy( lDialogString , "boxer --notification");
-				}
-				else ;
-				
-				if ( aIconType && strlen( aIconType ) )
-				{
-						strcat( lDialogString , " --window-icon '");
-						strcat( lDialogString , aIconType ) ;
-						strcat( lDialogString , "'" ) ;
-				}
-
-				strcat( lDialogString , " --text \"" ) ;
-				if ( aTitle && strlen(aTitle) )
-				{
-						strcat(lDialogString, aTitle) ;
-						strcat(lDialogString, "\n") ;
-				}
-				if ( aMessage && strlen( aMessage ) )
-				{
-						strcat( lDialogString , aMessage ) ;
-				}
-				strcat( lDialogString , " \"" ) ;
-		}
 		else if ( notifyPresent() ) /* haiku */
 		{
 			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
@@ -5771,6 +5736,33 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 			}
 			else strcat(lDialogString, "''" ) ;
 			strcat( lDialogString , "\"" ) ;
+		}
+		else if ( tfd_zenity3Present()>=5 )
+		{
+				/* zenity 2.32 & 3.14 has the notification but with a bug: it doesnt return from it */
+				/* zenity 3.8 show the notification as an alert ok cancel box */
+				/* zenity 3.44 doesn't have the notification (3.42 has it) */
+				if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
+				strcpy( lDialogString , "zenity --notification");
+				
+				if ( aIconType && strlen( aIconType ) )
+				{
+						strcat( lDialogString , " --window-icon '");
+						strcat( lDialogString , aIconType ) ;
+						strcat( lDialogString , "'" ) ;
+				}
+
+				strcat( lDialogString , " --text \"" ) ;
+				if ( aTitle && strlen(aTitle) )
+				{
+						strcat(lDialogString, aTitle) ;
+						strcat(lDialogString, "\n") ;
+				}
+				if ( aMessage && strlen( aMessage ) )
+				{
+						strcat( lDialogString , aMessage ) ;
+				}
+				strcat( lDialogString , " \"" ) ;
 		}
 		else
 		{
