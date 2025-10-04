@@ -3416,25 +3416,26 @@ static char gPythonName[16];
 
 int tfd_isDarwin(void)
 {
-		static int lsIsDarwin = -1 ;
-		struct utsname lUtsname ;
-		if ( lsIsDarwin < 0 )
-		{
-				lsIsDarwin = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Darwin") ;
-		}
-		return lsIsDarwin ;
+	static int lsIsDarwin = -1 ;
+	struct utsname lUtsname ;
+	if ( lsIsDarwin < 0 )
+	{
+		lsIsDarwin = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Darwin") ;
+	}
+	return lsIsDarwin ;
 }
 
 
 int tfd_isHaiku(void)
 {
-		static int lsIsHaiku = -1 ;
-		struct utsname lUtsname ;
-		if ( lsIsHaiku < 0 )
-		{
-				lsIsHaiku = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Haiku") ;
-		}
-		return lsIsHaiku ;
+	static int lsIsHaiku = -1 ;
+	struct utsname lUtsname ;
+	if ( lsIsHaiku < 0 )
+	{
+		printf ("lUtsname.sysname %s\n", lUtsname.sysname) ;
+		lsIsHaiku = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Haiku") ;
+	}
+	return lsIsHaiku ;
 }
 
 
