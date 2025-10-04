@@ -7835,7 +7835,8 @@ to set mycolor to choose color default color {");
 				}
 				else ;
 				
-				strcat( lDialogString , " --color-selection --show-palette" ) ;
+				strcat( lDialogString , " --color-selection" ) ;
+				if ( ! tfd_boxerPresent() ) strcat( lDialogString , " --show-palette" ) ;
 				sprintf( lDialogString + strlen(lDialogString), " --color=%s" , lDefaultHexRGB ) ;
 
 				strcat(lDialogString, " --title=\"") ;
