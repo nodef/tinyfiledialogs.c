@@ -5388,28 +5388,56 @@ my \\$notificationsObject = \\$notificationsService->get_object('/org/freedeskto
 		else if ( !isTerminalRunning() && notifysendPresent() && !strcmp("ok" , aDialogType) )
 		{
 
-				if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notifysend");return 1;}
-				strcpy( lDialogString , "notify-send" ) ;
-				if ( aIconType && strlen(aIconType) )
-				{
-						strcat( lDialogString , " -i '" ) ;
-						strcat( lDialogString , aIconType ) ;
-						strcat( lDialogString , "'" ) ;
-				}
-		strcat( lDialogString , " \"" ) ;
-				if ( aTitle && strlen(aTitle) )
-				{
-						strcat(lDialogString, aTitle) ;
-						strcat( lDialogString , " | " ) ;
-				}
-				if ( aMessage && strlen(aMessage) )
-				{
-					tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
-					tfd_replaceSubStr( lBuff , "\n" , " | " , lBuff2 ) ;
-					tfd_replaceSubStr( lBuff2 , "\t" , "  " , lBuff ) ;
-					strcat(lDialogString, lBuff) ;
-				}
-				strcat( lDialogString , "\"" ) ;
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notifysend");return 1;}
+			strcpy( lDialogString , "notify-send" ) ;
+			if ( aIconType && strlen(aIconType) )
+			{
+					strcat( lDialogString , " -i '" ) ;
+					strcat( lDialogString , aIconType ) ;
+					strcat( lDialogString , "'" ) ;
+			}
+			strcat( lDialogString , " \"" ) ;
+			if ( aTitle && strlen(aTitle) )
+			{
+					strcat(lDialogString, aTitle) ;
+					strcat( lDialogString , " | " ) ;
+			}
+			if ( aMessage && strlen(aMessage) )
+			{
+				tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
+				tfd_replaceSubStr( lBuff , "\n" , " | " , lBuff2 ) ;
+				tfd_replaceSubStr( lBuff2 , "\t" , "  " , lBuff ) ;
+				strcat(lDialogString, lBuff) ;
+			}
+			strcat( lDialogString , "\"" ) ;
+		}
+		else if ( !isTerminalRunning() && notifyPresent() && !strcmp("ok" , aDialogType) )
+		{
+
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
+			strcpy( lDialogString , "notify" ) ;
+			if ( aIconType && strlen(aIconType) )
+			{
+				strcat( lDialogString , " --icon '" ) ;
+				strcat( lDialogString , aIconType ) ;
+				strcat( lDialogString , "'" ) ;
+			}
+			if ( aTitle && strlen(aTitle) )
+			{
+				strcat( lDialogString , " --title '" ) ;
+				strcat( lDialogString , aTitle ) ;
+				strcat( lDialogString , "'" ) ;
+			}
+			strcat( lDialogString , " \"" ) ;
+			if ( aMessage && strlen(aMessage) )
+			{
+				tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
+				tfd_replaceSubStr( lBuff , "\n" , " | " , lBuff2 ) ;
+				tfd_replaceSubStr( lBuff2 , "\t" , "  " , lBuff ) ;
+				strcat(lDialogString, lBuff) ;
+			}
+			else strcat(lDialogString, "''");
+			strcat( lDialogString , "\"" ) ;
 		}
 		else
 		{
