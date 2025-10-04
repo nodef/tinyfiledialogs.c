@@ -5535,7 +5535,8 @@ int tinyfd_notifyPopup(
 		char const * aMessage , /* NULL or ""  may contain \n and \t */
 		char const * aIconType ) /* "info" "warning" "error" */
 {
-		char lBuff[MAX_PATH_OR_CMD];
+	char lBuff[MAX_PATH_OR_CMD];
+	char lBuff2[MAX_PATH_OR_CMD];
 		char * lDialogString = NULL ;
 		char * lpDialogString ;
 		FILE * lIn ;
@@ -5728,8 +5729,8 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 			if ( aMessage && strlen(aMessage) )
 			{
 				tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
-				tfd_replaceSubStr( aMessage , "\n" , " | " , lBuff ) ;
-				tfd_replaceSubStr( aMessage , "\t" , "  " , lBuff ) ;
+				tfd_replaceSubStr( lBuff , "\n" , " | " , lBuff2 ) ;
+				tfd_replaceSubStr( lBuff2 , "\t" , "  " , lBuff ) ;
 				strcat(lDialogString, lBuff) ;
 			}
 			else strcat(lDialogString, "''" ) ;
