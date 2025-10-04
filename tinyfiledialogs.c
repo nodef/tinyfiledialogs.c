@@ -5730,7 +5730,7 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 				//tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
 				//tfd_replaceSubStr( aMessage , "\n" , " | " , lBuff ) ;
 				//tfd_replaceSubStr( aMessage , "\t" , "  " , lBuff ) ;
-				strcat(lDialogString, lBuff) ;
+				strcat(lDialogString, aMessage) ;
 			}
 			else strcat(lDialogString, "''" ) ;
 			strcat( lDialogString , "\"" ) ;
