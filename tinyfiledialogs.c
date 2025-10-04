@@ -4103,45 +4103,45 @@ static int dunstPresent(void)
 
 int tfd_boxerPresent(void)
 {
-		static int lBoxerPresent = -1 ;
-		if ( lBoxerPresent < 0 )
-		{
-				lBoxerPresent = detectPresence("boxer") ;
-		}
-		return lBoxerPresent && graphicMode( ) ;
+	static int lBoxerPresent = -1 ;
+	if ( lBoxerPresent < 0 )
+	{
+		lBoxerPresent = detectPresence("boxer") ;
+	}
+	return lBoxerPresent && graphicMode( ) ;
 }
 
 
 int tfd_qarmaPresent(void)
 {
-		static int lQarmaPresent = -1 ;
-		if ( lQarmaPresent < 0 )
-		{
-				lQarmaPresent = detectPresence("qarma") ;
-		}
-		return lQarmaPresent && graphicMode( ) ;
+	static int lQarmaPresent = -1 ;
+	if ( lQarmaPresent < 0 )
+	{
+		lQarmaPresent = detectPresence("qarma") ;
+	}
+	return lQarmaPresent && graphicMode( ) ;
 }
 
 
 int tfd_matedialogPresent(void)
 {
-		static int lMatedialogPresent = -1 ;
-		if ( lMatedialogPresent < 0 )
-		{
-				lMatedialogPresent = detectPresence("matedialog") ;
-		}
-		return lMatedialogPresent && graphicMode( ) ;
+	static int lMatedialogPresent = -1 ;
+	if ( lMatedialogPresent < 0 )
+	{
+		lMatedialogPresent = detectPresence("matedialog") ;
+	}
+	return lMatedialogPresent && graphicMode( ) ;
 }
 
 
 int tfd_shellementaryPresent(void)
 {
-		static int lShellementaryPresent = -1 ;
-		if ( lShellementaryPresent < 0 )
-		{
-				lShellementaryPresent = 0 ; /*detectPresence("shellementary"); shellementary is not ready yet */
-		}
-		return lShellementaryPresent && graphicMode( ) ;
+	static int lShellementaryPresent = -1 ;
+	if ( lShellementaryPresent < 0 )
+	{
+		lShellementaryPresent = 0 ; /*detectPresence("shellementary"); shellementary is not ready yet */
+	}
+	return lShellementaryPresent && graphicMode( ) ;
 }
 
 
@@ -5756,155 +5756,155 @@ char * tinyfd_inputBox(
 		size_t lTitleLen ;
 		size_t lMessageLen ;
 
-				if (!aTitle && !aMessage && !aDefaultInput) return lBuff; /* now I can fill lBuff from outside */
+		if (!aTitle && !aMessage && !aDefaultInput) return lBuff; /* now I can fill lBuff from outside */
 
 		lBuff[0]='\0';
 
-				if (tfd_quoteDetected(aTitle)) return tinyfd_inputBox("INVALID TITLE WITH QUOTES", aMessage, aDefaultInput);
-				if (tfd_quoteDetected(aMessage)) return tinyfd_inputBox(aTitle, "INVALID MESSAGE WITH QUOTES", aDefaultInput);
-				if (tfd_quoteDetected(aDefaultInput)) return tinyfd_inputBox(aTitle, aMessage, "INVALID DEFAULT_INPUT WITH QUOTES: use the GRAVE ACCENT \\x60 instead.");
+		if (tfd_quoteDetected(aTitle)) return tinyfd_inputBox("INVALID TITLE WITH QUOTES", aMessage, aDefaultInput);
+		if (tfd_quoteDetected(aMessage)) return tinyfd_inputBox(aTitle, "INVALID MESSAGE WITH QUOTES", aDefaultInput);
+		if (tfd_quoteDetected(aDefaultInput)) return tinyfd_inputBox(aTitle, aMessage, "INVALID DEFAULT_INPUT WITH QUOTES: use the GRAVE ACCENT \\x60 instead.");
 
 		lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
 		lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
 		if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
 		{
-				lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
+			lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
 		}
 
 		if ( osascriptPresent( ) )
 		{
-				if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char *)1;}
-				strcpy( lDialogString , "osascript ");
-				if ( ! osx9orBetter() ) strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
-				strcat( lDialogString , " -e 'try' -e 'display dialog \"") ;
-				if ( aMessage && strlen(aMessage) )
-				{
-						strcat(lDialogString, aMessage) ;
-				}
-				strcat(lDialogString, "\" ") ;
-				strcat(lDialogString, "default answer \"") ;
-				if ( aDefaultInput && strlen(aDefaultInput) )
-				{
-						strcat(lDialogString, aDefaultInput) ;
-				}
-				strcat(lDialogString, "\" ") ;
-				if ( ! aDefaultInput )
-				{
-						strcat(lDialogString, "hidden answer true ") ;
-				}
-				if ( aTitle && strlen(aTitle) )
-				{
-						strcat(lDialogString, "with title \"") ;
-						strcat(lDialogString, aTitle) ;
-						strcat(lDialogString, "\" ") ;
-				}
-				strcat(lDialogString, "with icon note' ") ;
-				strcat(lDialogString, "-e '\"1\" & text returned of result' " );
-				strcat(lDialogString, "-e 'on error number -128' " ) ;
-				strcat(lDialogString, "-e '0' " );
-				strcat(lDialogString, "-e 'end try'") ;
-				if ( ! osx9orBetter() ) strcat(lDialogString, " -e 'end tell'") ;
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char *)1;}
+			strcpy( lDialogString , "osascript ");
+			if ( ! osx9orBetter() ) strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
+			strcat( lDialogString , " -e 'try' -e 'display dialog \"") ;
+			if ( aMessage && strlen(aMessage) )
+			{
+					strcat(lDialogString, aMessage) ;
+			}
+			strcat(lDialogString, "\" ") ;
+			strcat(lDialogString, "default answer \"") ;
+			if ( aDefaultInput && strlen(aDefaultInput) )
+			{
+					strcat(lDialogString, aDefaultInput) ;
+			}
+			strcat(lDialogString, "\" ") ;
+			if ( ! aDefaultInput )
+			{
+					strcat(lDialogString, "hidden answer true ") ;
+			}
+			if ( aTitle && strlen(aTitle) )
+			{
+					strcat(lDialogString, "with title \"") ;
+					strcat(lDialogString, aTitle) ;
+					strcat(lDialogString, "\" ") ;
+			}
+			strcat(lDialogString, "with icon note' ") ;
+			strcat(lDialogString, "-e '\"1\" & text returned of result' " );
+			strcat(lDialogString, "-e 'on error number -128' " ) ;
+			strcat(lDialogString, "-e '0' " );
+			strcat(lDialogString, "-e 'end try'") ;
+			if ( ! osx9orBetter() ) strcat(lDialogString, " -e 'end tell'") ;
 		}
 		else if ( tfd_kdialogPresent() )
 		{
-				if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char *)1;}
-				strcpy( lDialogString , "szAnswer=$(kdialog" ) ;
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char *)1;}
+			strcpy( lDialogString , "szAnswer=$(kdialog" ) ;
 
-								if ( (tfd_kdialogPresent() == 2) && tfd_xpropPresent() )
-				{
-						strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-				}
+							if ( (tfd_kdialogPresent() == 2) && tfd_xpropPresent() )
+			{
+					strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+			}
 
-				if ( ! aDefaultInput )
-				{
-						strcat(lDialogString, " --password ") ;
-				}
-				else
-				{
-						strcat(lDialogString, " --inputbox ") ;
+			if ( ! aDefaultInput )
+			{
+					strcat(lDialogString, " --password ") ;
+			}
+			else
+			{
+					strcat(lDialogString, " --inputbox ") ;
 
-				}
-				strcat(lDialogString, "\"") ;
-				if ( aMessage && strlen(aMessage) )
-				{
-						strcat(lDialogString, aMessage ) ;
-				}
-				strcat(lDialogString , "\" \"" ) ;
-				if ( aDefaultInput && strlen(aDefaultInput) )
-				{
-						strcat(lDialogString, aDefaultInput ) ;
-				}
-				strcat(lDialogString , "\"" ) ;
-				if ( aTitle && strlen(aTitle) )
-				{
-						strcat(lDialogString, " --title \"") ;
-						strcat(lDialogString, aTitle) ;
-						strcat(lDialogString, "\"") ;
-				}
-				strcat( lDialogString ,
-						");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
+			}
+			strcat(lDialogString, "\"") ;
+			if ( aMessage && strlen(aMessage) )
+			{
+					strcat(lDialogString, aMessage ) ;
+			}
+			strcat(lDialogString , "\" \"" ) ;
+			if ( aDefaultInput && strlen(aDefaultInput) )
+			{
+					strcat(lDialogString, aDefaultInput ) ;
+			}
+			strcat(lDialogString , "\"" ) ;
+			if ( aTitle && strlen(aTitle) )
+			{
+					strcat(lDialogString, " --title \"") ;
+					strcat(lDialogString, aTitle) ;
+					strcat(lDialogString, "\"") ;
+			}
+			strcat( lDialogString ,
+					");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
 		}
 		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent()
 				|| tfd_qarmaPresent() || tfd_boxerPresent() )
 		{
-				if ( tfd_zenityPresent() )
-				{
-						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
-						strcpy( lDialogString , "szAnswer=$(zenity" ) ;
-												if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
-						{
-								strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-						}
-				}
-				else if ( tfd_matedialogPresent() )
-				{
-						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char *)1;}
-						strcpy( lDialogString ,  "szAnswer=$(matedialog" ) ;
-				}
-				else if ( tfd_shellementaryPresent() )
-				{
-						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char *)1;}
-						strcpy( lDialogString , "szAnswer=$(shellementary" ) ;
-				}
-				else if ( tfd_qarmaPresent() )
-				{
-						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char *)1;}
-						strcpy( lDialogString ,  "szAnswer=$(qarma" ) ;
-												if ( !getenv("SSH_TTY") && tfd_xpropPresent() )
-						{
-								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-						}
-				}
-				else if ( tfd_boxerPresent() )
-				{
-						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"boxer");return (char *)1;}
-						strcpy( lDialogString ,  "szAnswer=$(boxer" ) ;
-				}
-				else ;
-				
-				strcat( lDialogString ," --entry" ) ;
+			if ( tfd_zenityPresent() )
+			{
+					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
+					strcpy( lDialogString , "szAnswer=$(zenity" ) ;
+					if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
+					{
+							strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+					}
+			}
+			else if ( tfd_matedialogPresent() )
+			{
+					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char *)1;}
+					strcpy( lDialogString ,  "szAnswer=$(matedialog" ) ;
+			}
+			else if ( tfd_shellementaryPresent() )
+			{
+					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char *)1;}
+					strcpy( lDialogString , "szAnswer=$(shellementary" ) ;
+			}
+			else if ( tfd_qarmaPresent() )
+			{
+					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char *)1;}
+					strcpy( lDialogString ,  "szAnswer=$(qarma" ) ;
+					if ( !getenv("SSH_TTY") && tfd_xpropPresent() )
+					{
+							strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+					}
+			}
+			else if ( tfd_boxerPresent() )
+			{
+					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"boxer");return (char *)1;}
+					strcpy( lDialogString ,  "szAnswer=$(boxer" ) ;
+			}
+			else ;
+			
+			strcat( lDialogString ," --entry" ) ;
 
-				strcat(lDialogString, " --title=\"") ;
-				if (aTitle && strlen(aTitle)) strcat(lDialogString, aTitle) ;
-				strcat(lDialogString, "\"") ;
+			strcat(lDialogString, " --title=\"") ;
+			if (aTitle && strlen(aTitle)) strcat(lDialogString, aTitle) ;
+			strcat(lDialogString, "\"") ;
 
-				strcat(lDialogString, " --text=\"") ;
-				if (aMessage && strlen(aMessage)) strcat(lDialogString, aMessage) ;
-				strcat(lDialogString, "\"") ;
+			strcat(lDialogString, " --text=\"") ;
+			if (aMessage && strlen(aMessage)) strcat(lDialogString, aMessage) ;
+			strcat(lDialogString, "\"") ;
 
-				if ( aDefaultInput )
-				{
-						strcat(lDialogString, " --entry-text=\"") ;
-						strcat(lDialogString, aDefaultInput) ;
-						strcat(lDialogString, "\"") ;
-				}
-				else
-				{
-						strcat(lDialogString, " --hide-text") ;
-				}
-				if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
-				strcat( lDialogString ,
-								");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
+			if ( aDefaultInput )
+			{
+					strcat(lDialogString, " --entry-text=\"") ;
+					strcat(lDialogString, aDefaultInput) ;
+					strcat(lDialogString, "\"") ;
+			}
+			else
+			{
+					strcat(lDialogString, " --hide-text") ;
+			}
+			if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
+			strcat( lDialogString ,
+							");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
 		}
 		else if (tfd_yadPresent())
 		{
