@@ -4108,6 +4108,7 @@ int tfd_boxerPresent(void)
 	{
 		lBoxerPresent = detectPresence("boxer") ;
 	}
+	printf("lBoxerPresent %d\n", lBoxerPresent);
 	return lBoxerPresent && graphicMode( ) ;
 }
 
