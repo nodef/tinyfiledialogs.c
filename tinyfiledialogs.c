@@ -5703,37 +5703,10 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 			if ( aMessage && strlen(aMessage) )
 			{
 				tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
-				tfd_replaceSubStr( aMessage , "\n" , " | " , lBuff ) ;
-				tfd_replaceSubStr( aMessage , "\t" , "  " , lBuff ) ;
-				strcat(lDialogString, lBuff) ;
-			}
-			strcat( lDialogString , "\"" ) ;
-		}
-		else if ( notifyPresent() ) /* haiku */
-		{
-			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
-			strcpy( lDialogString , "notify" ) ;
-			if ( aIconType && strlen(aIconType) )
-			{
-				strcat( lDialogString , " --icon '" ) ;
-				strcat( lDialogString , aIconType ) ;
-				strcat( lDialogString , "'" ) ;
-			}
-			if ( aTitle && strlen(aTitle) )
-			{
-				strcat( lDialogString , " --title '" ) ;
-				strcat(lDialogString, aTitle) ;
-				strcat( lDialogString , "'" ) ;
-			}
-			strcat( lDialogString , " \"" ) ;
-			if ( aMessage && strlen(aMessage) )
-			{
-				tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
 				tfd_replaceSubStr( lBuff , "\n" , " | " , lBuff2 ) ;
 				tfd_replaceSubStr( lBuff2 , "\t" , "  " , lBuff ) ;
 				strcat(lDialogString, lBuff) ;
 			}
-			else strcat(lDialogString, "''" ) ;
 			strcat( lDialogString , "\"" ) ;
 		}
 		else if ( (tfd_zenity3Present()>=5) || tfd_boxerPresent() )
@@ -5771,6 +5744,33 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 						strcat( lDialogString , aMessage ) ;
 				}
 				strcat( lDialogString , " \"" ) ;
+		}
+		else if ( notifyPresent() ) /* haiku */
+		{
+			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notify");return 1;}
+			strcpy( lDialogString , "notify" ) ;
+			if ( aIconType && strlen(aIconType) )
+			{
+				strcat( lDialogString , " --icon '" ) ;
+				strcat( lDialogString , aIconType ) ;
+				strcat( lDialogString , "'" ) ;
+			}
+			if ( aTitle && strlen(aTitle) )
+			{
+				strcat( lDialogString , " --title '" ) ;
+				strcat(lDialogString, aTitle) ;
+				strcat( lDialogString , "'" ) ;
+			}
+			strcat( lDialogString , " \"" ) ;
+			if ( aMessage && strlen(aMessage) )
+			{
+				tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
+				tfd_replaceSubStr( lBuff , "\n" , " | " , lBuff2 ) ;
+				tfd_replaceSubStr( lBuff2 , "\t" , "  " , lBuff ) ;
+				strcat(lDialogString, lBuff) ;
+			}
+			else strcat(lDialogString, "''" ) ;
+			strcat( lDialogString , "\"" ) ;
 		}
 		else
 		{
