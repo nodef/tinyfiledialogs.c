@@ -5516,8 +5516,8 @@ int tinyfd_notifyPopup(
 		size_t lTitleLen ;
 		size_t lMessageLen ;
 
-				if (tfd_quoteDetected(aTitle)) return tinyfd_notifyPopup("INVALID TITLE WITH QUOTES", aMessage, aIconType);
-				if (tfd_quoteDetected(aMessage)) return tinyfd_notifyPopup(aTitle, "INVALID MESSAGE WITH QUOTES", aIconType);
+		if (tfd_quoteDetected(aTitle)) return tinyfd_notifyPopup("INVALID TITLE WITH QUOTES", aMessage, aIconType);
+		if (tfd_quoteDetected(aMessage)) return tinyfd_notifyPopup(aTitle, "INVALID MESSAGE WITH QUOTES", aIconType);
 
 		if ( getenv("SSH_TTY") && !dunstifyPresent() && !dunstPresent() )
 		{
