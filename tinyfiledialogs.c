@@ -3809,9 +3809,9 @@ static int graphicMode(void)
 			else lGraphicMode = 1 ;
 		}
 		else lGraphicMode = 0 ;
-
-		if ( tinyfd_forceConsole && ( isTerminalRunning() || terminalName() ) ) lGraphicMode = 0 ;
-	}	
+	}
+	
+	if ( tinyfd_forceConsole && ( isTerminalRunning() || terminalName() ) ) return 0 ;	
 	
 	return lGraphicMode ;
 }
