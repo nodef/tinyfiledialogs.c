@@ -5727,10 +5727,10 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 			strcat( lDialogString , " \"" ) ;
 			if ( aMessage && strlen(aMessage) )
 			{
-				//tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
-				//tfd_replaceSubStr( aMessage , "\n" , " | " , lBuff ) ;
-				//tfd_replaceSubStr( aMessage , "\t" , "  " , lBuff ) ;
-				strcat(lDialogString, aMessage) ;
+				tfd_replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
+				tfd_replaceSubStr( lBuff , "\n" , " | " , lBuff ) ;
+				tfd_replaceSubStr( lBuff , "\t" , "  " , lBuff ) ;
+				strcat(lDialogString, lBuff) ;
 			}
 			else strcat(lDialogString, "''" ) ;
 			strcat( lDialogString , "\"" ) ;
