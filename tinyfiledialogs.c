@@ -3341,16 +3341,16 @@ char * tinyfd_colorChooser(
 		unsigned char const aDefaultRGB[3], /* { 0 , 255 , 255 } */
 		unsigned char aoResultRGB[3]) /* { 0 , 0 , 0 } */
 {
-		static char lDefaultHexRGB[16];
+	static char lDefaultHexRGB[16];
 	int i;
 	char * p ;
-		char * lPointerInputBox;
-		char lString[MAX_PATH_OR_CMD];
+	char * lPointerInputBox;
+	char lString[MAX_PATH_OR_CMD];
 
-		lDefaultHexRGB[0] = '\0';
+	lDefaultHexRGB[0] = '\0';
 
-		if (tfd_quoteDetected(aTitle)) return tinyfd_colorChooser("INVALID TITLE WITH QUOTES", aDefaultHexRGB, aDefaultRGB, aoResultRGB);
-		if (tfd_quoteDetected(aDefaultHexRGB)) return tinyfd_colorChooser(aTitle, "INVALID DEFAULT_HEX_RGB WITH QUOTES: use the GRAVE ACCENT \\x60 instead.", aDefaultRGB, aoResultRGB);
+	if (tfd_quoteDetected(aTitle)) return tinyfd_colorChooser("INVALID TITLE WITH QUOTES", aDefaultHexRGB, aDefaultRGB, aoResultRGB);
+	if (tfd_quoteDetected(aDefaultHexRGB)) return tinyfd_colorChooser(aTitle, "INVALID DEFAULT_HEX_RGB WITH QUOTES: use the GRAVE ACCENT \\x60 instead.", aDefaultRGB, aoResultRGB);
 
 	if ( (!tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent()) )
 				&& (!getenv("SSH_CLIENT") || getenvDISPLAY()))
@@ -3389,22 +3389,22 @@ char * tinyfd_colorChooser(
 
 	if ( !p || (strlen(p) != 7) || (p[0] != '#') )
 	{
-			return NULL ;
+		return NULL ;
 	}
 	for ( i = 1 ; i < 7 ; i ++ )
 	{
-			if ( ! isxdigit( (int) p[i] ) )
-			{
-					return NULL ;
-			}
+		if ( ! isxdigit( (int) p[i] ) )
+		{
+				return NULL ;
+		}
 	}
 	Hex2RGB(p,aoResultRGB);
 
-		strcpy(lDefaultHexRGB, p);
+	strcpy(lDefaultHexRGB, p);
 
-		if (lPointerInputBox) strcpy(lPointerInputBox, lString); /* restore its previous content to tinyfd_inputBox */
+	if (lPointerInputBox) strcpy(lPointerInputBox, lString); /* restore its previous content to tinyfd_inputBox */
 
-		return lDefaultHexRGB;
+	return lDefaultHexRGB;
 }
 
 
@@ -3432,8 +3432,8 @@ int tfd_isHaiku(void)
 	struct utsname lUtsname ;
 	if ( lsIsHaiku < 0 )
 	{
-		printf ("lUtsname.sysname %s\n", lUtsname.sysname) ;
 		lsIsHaiku = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Haiku") ;
+		printf ("lUtsname.sysname %s %d\n", lUtsname.sysname, lsIsHaiku) ;
 	}
 	return lsIsHaiku ;
 }
