@@ -4761,7 +4761,7 @@ int tinyfd_messageBox(
 				strcat(lDialogString, "\"") ;
 
 				if ( (tfd_zenity3Present() >= 3) || (!tfd_zenityPresent() && (tfd_shellementaryPresent()
-					|| tfd_qarmaPresent() || tfd_boxerPresent()) ) )
+					|| tfd_qarmaPresent() /*|| tfd_boxerPresent()*/) ) )
 				{
 						strcat( lDialogString , " --icon-name=dialog-" ) ;
 						if ( aIconType && (! strcmp( "question" , aIconType )
