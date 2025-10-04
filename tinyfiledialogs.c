@@ -3418,10 +3418,7 @@ int tfd_isDarwin(void)
 {
 	static int lsIsDarwin = -1 ;
 	struct utsname lUtsname ;
-	if ( lsIsDarwin < 0 )
-	{
-		lsIsDarwin = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Darwin") ;
-	}
+	if ( lsIsDarwin < 0 ) lsIsDarwin = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Darwin") ;
 	return lsIsDarwin ;
 }
 
@@ -3430,11 +3427,7 @@ int tfd_isHaiku(void)
 {
 	static int lsIsHaiku = -1 ;
 	struct utsname lUtsname ;
-	if ( lsIsHaiku < 0 )
-	{
-		lsIsHaiku = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Haiku") ;
-		printf ("lUtsname.sysname %s %d\n", lUtsname.sysname, lsIsHaiku) ;
-	}
+	if ( lsIsHaiku < 0 ) lsIsHaiku = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Haiku") ;
 	return lsIsHaiku ;
 }
 
