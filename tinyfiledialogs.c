@@ -151,7 +151,7 @@ tinyfd_response is then filled with the retain solution.
 possible values for tinyfd_response are (all lowercase)
 for graphic mode:
   windows_wchar windows applescript kdialog zenity zenity3 yad matedialog
-  shellementary qarma python2-tkinter python3-tkinter python-dbus
+  shellementary qarma shanty boxer python2-tkinter python3-tkinter python-dbus
   perl-dbus gxmessage gmessage xmessage xdialog gdialog dunst
 for console mode:
   dialog whiptail basicinput no_solution */
@@ -181,7 +181,7 @@ char tinyfd_needs[] = "\
       \\|\
 \ntiny file dialogs on UNIX needs:\
 \n   applescript or kdialog or yad or Xdialog\
-\nor zenity (or matedialog or shellementary or qarma)\
+\nor zenity (or matedialog, shellementary, qarma, shanty, boxer)\
 \nor python (2 or 3) + tkinter + python-dbus (optional)\
 \nor dialog (opens console if needed) ** Disabled by default **\
 \nor xterm + bash (opens console for basic input)\
@@ -4095,6 +4095,18 @@ static int dunstPresent(void)
 }
 
 
+int tfd_shantyPresent(void)
+{
+	static int lShantyPresent = -1 ;
+	if ( lShantyPresent < 0 )
+	{
+		lShantyPresent = detectPresence("shanty") ;
+	}
+	/*printf("lShantyPresent %d\n", lShantyPresent);*/
+	return lShantyPresent && graphicMode( ) ;
+}
+
+
 int tfd_boxerPresent(void)
 {
 	static int lBoxerPresent = -1 ;
@@ -4686,7 +4698,7 @@ int tinyfd_messageBox(
 				}
 		}
 		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent()
-				|| tfd_qarmaPresent() || tfd_boxerPresent() )
+				|| tfd_qarmaPresent() || tfd_shantyPresent() || tfd_boxerPresent() )
 		{
 				if ( tfd_zenityPresent() )
 				{
@@ -4715,6 +4727,11 @@ int tinyfd_messageBox(
 						{
 								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
+				}
+				else if ( tfd_shantyPresent() )
+				{
+						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return 1;}
+						strcpy( lDialogString , "szAnswer=$(shanty" ) ;
 				}
 				else if ( tfd_boxerPresent() )
 				{
@@ -5840,7 +5857,7 @@ char * tinyfd_inputBox(
 					");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
 		}
 		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent()
-				|| tfd_qarmaPresent() || tfd_boxerPresent() )
+				|| tfd_qarmaPresent() || tfd_shantyPresent() || tfd_boxerPresent() )
 		{
 			if ( tfd_zenityPresent() )
 			{
@@ -5869,6 +5886,11 @@ char * tinyfd_inputBox(
 					{
 							strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 					}
+			}
+			else if ( tfd_shantyPresent() )
+			{
+					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return (char *)1;}
+					strcpy( lDialogString ,  "szAnswer=$(shanty" ) ;
 			}
 			else if ( tfd_boxerPresent() )
 			{
@@ -6438,7 +6460,7 @@ char * tinyfd_saveFileDialog(
 				}
 		}
 		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent()
-				|| tfd_qarmaPresent() || tfd_boxerPresent() )
+				|| tfd_qarmaPresent() || tfd_shantyPresent() || tfd_boxerPresent() )
 		{
 				if ( tfd_zenityPresent() )
 				{
@@ -6467,6 +6489,11 @@ char * tinyfd_saveFileDialog(
 						{
 								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
+				}
+				else if ( tfd_shantyPresent() )
+				{
+						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return (char *)1;}
+						strcpy( lDialogString , "shanty" ) ;
 				}
 				else if ( tfd_boxerPresent() )
 				{
@@ -6973,15 +7000,15 @@ char * tinyfd_openFileDialog(
 				}
 		}
 		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent()
-				|| tfd_qarmaPresent() || tfd_boxerPresent() )
+				|| tfd_qarmaPresent() || tfd_shantyPresent() || tfd_boxerPresent() )
 		{
 				if ( tfd_zenityPresent() )
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
 						strcpy( lDialogString , "zenity" ) ;
-												if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
+						if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
 						{
-								strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
+							strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
 				}
 				else if ( tfd_matedialogPresent() )
@@ -7002,6 +7029,11 @@ char * tinyfd_openFileDialog(
 						{
 								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
+				}
+				else if ( tfd_shantyPresent() )
+				{
+						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return (char *)1;}
+						strcpy( lDialogString , "shanty" ) ;
 				}
 				else if ( tfd_boxerPresent() )
 				{
@@ -7456,7 +7488,7 @@ char * tinyfd_selectFolderDialog(
 				}
 		}
 		else if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent()
-				|| tfd_qarmaPresent() || tfd_boxerPresent() )
+				|| tfd_qarmaPresent() || tfd_shantyPresent() || tfd_boxerPresent() )
 		{
 				if ( tfd_zenityPresent() )
 				{
@@ -7485,6 +7517,11 @@ char * tinyfd_selectFolderDialog(
 						{
 								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
+				}
+				else if ( tfd_shantyPresent() )
+				{
+						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return (char *)1;}
+						strcpy( lDialogString , "shanty" ) ;
 				}
 				else if ( tfd_boxerPresent() )
 				{
@@ -7797,7 +7834,7 @@ to set mycolor to choose color default color {");
 				}
 		}
 		else if ( tfd_zenity3Present() || tfd_matedialogPresent() || tfd_shellementaryPresent()
-				|| tfd_qarmaPresent() || tfd_boxerPresent() )
+				|| tfd_qarmaPresent() || tfd_shantyPresent() || tfd_boxerPresent() )
 		{
 				lWasZenity3 = 1 ;
 				if ( tfd_zenity3Present() )
@@ -7828,6 +7865,11 @@ to set mycolor to choose color default color {");
 								strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
 				}
+				else if ( tfd_shantyPresent() )
+				{
+						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return (char *)1;}
+						strcpy( lDialogString , "shanty" ) ;
+				}
 				else if ( tfd_boxerPresent() )
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"boxer");return (char *)1;}
@@ -7836,7 +7878,7 @@ to set mycolor to choose color default color {");
 				else ;
 				
 				strcat( lDialogString , " --color-selection" ) ;
-				if ( ! tfd_boxerPresent() ) strcat( lDialogString , " --show-palette" ) ;
+				if ( ! tfd_boxerPresent() && ! tfd_shantyPresent() ) strcat( lDialogString , " --show-palette" ) ;
 				sprintf( lDialogString + strlen(lDialogString), " --color=%s" , lDefaultHexRGB ) ;
 
 				strcat(lDialogString, " --title=\"") ;

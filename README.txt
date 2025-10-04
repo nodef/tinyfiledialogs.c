@@ -21,7 +21,7 @@ tiny file dialogs ( cross-platform C C++ ) v3.21 [Oct 4, 2025]
 
 C89/C18 & C++98/C++23 compliant: tested with C & C++ compilers
 VisualStudio MinGW GCC Clang TinyCC IntelCC OpenWatcomC BorlandC SunCC
-on Windows Mac Linux Bsd Solaris Minix Raspbian Flatpak
+on Windows Mac Linux Bsd Solaris Minix Raspbian Flatpak Haiku
 using Gnome Kde Mate Enlightenment Cinnamon Budgie Unity Lxde Lxqt Xfce
       WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm Cwm
 
@@ -154,8 +154,8 @@ char const * tinyfd_colorChooser(
   (on windows the no linking claim is a lie)
 - On unix / macos: it only tries command line calls, so no linking is need.
 - On unix /macos you need one of the following:
-  applescript, kdialog, zenity, matedialog, shellementary, qarma, yad,
-  python (2 or 3)with tkinter/python-dbus, Xdialog
+  applescript, kdialog, zenity, matedialog, shellementary, qarma, shanty, boxer,
+  yad, python (2 or 3)with tkinter/python-dbus, Xdialog
   or curses dialogs (opens terminal if running without console).
 - One of those is already included on most (if not all) desktops.
 - In the absence of those it will use gdialog, gxmessage or whiptail
