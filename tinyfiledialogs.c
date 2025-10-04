@@ -3804,7 +3804,7 @@ static int graphicMode(void)
 		}
 		else lGraphicMode = 0 ;
 	}
-	printf("lGraphicMode %d\1", lGraphicMode);
+	printf("lGraphicMode %d\n", lGraphicMode);
 	if ( tinyfd_forceConsole && ( isTerminalRunning() || terminalName() ) ) return 0 ;	
 	
 	return lGraphicMode ;
