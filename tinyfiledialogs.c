@@ -3804,7 +3804,7 @@ static int graphicMode(void)
 		}
 		else lGraphicMode = 0 ;
 	}
-	
+	printf("lGraphicMode %d\1", lGraphicMode);
 	if ( tinyfd_forceConsole && ( isTerminalRunning() || terminalName() ) ) return 0 ;	
 	
 	return lGraphicMode ;
@@ -4102,7 +4102,7 @@ int tfd_boxerPresent(void)
 	{
 		lBoxerPresent = detectPresence("boxer") ;
 	}
-	printf("lBoxerPresent %d\n", lBoxerPresent);
+	/*printf("lBoxerPresent %d\n", lBoxerPresent);*/
 	return lBoxerPresent && graphicMode( ) ;
 }
 
