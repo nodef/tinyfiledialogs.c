@@ -4613,10 +4613,10 @@ int tinyfd_messageBox(
 		strcat( lDialogString, ")' ") ;
 
 		strcat( lDialogString,
-"-e 'if vButton is \"Yes\" then' -e 'return 1'\
- -e 'else if vButton is \"OK\" then' -e 'return 1'\
- -e 'else if vButton is \"No\" then' -e 'return 2'\
- -e 'else' -e 'return 0' -e 'end if' " );
+"-e 'if vButton is \"Yes\" then' -e 'return 1' \
+-e 'else if vButton is \"OK\" then' -e 'return 1' \
+-e 'else if vButton is \"No\" then' -e 'return 2' \
+-e 'else' -e 'return 0' -e 'end if' " );
 
 		strcat( lDialogString, "-e 'on error number -128' " ) ;
 		strcat( lDialogString, "-e '0' " );
@@ -6684,8 +6684,8 @@ char * tinyfd_saveFileDialog(
 		if ( tfd_isDarwin( ) )
 		{
                 strcat( lDialogString ,
-"import os;os.system('''/usr/bin/osascript -e 'tell app \\\"Finder\\\" to set\
- frontmost of process \\\"Python\\\" to true' ''');");
+"import os;os.system('''/usr/bin/osascript -e 'tell app \\\"Finder\\\" to set \
+frontmost of process \\\"Python\\\" to true' ''');");
 				}
 
 				strcat( lDialogString , "res=tkFileDialog.asksaveasfilename(");
