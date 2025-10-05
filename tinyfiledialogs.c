@@ -4221,9 +4221,9 @@ int tfd_zenityVersion(void)
 			/* 3018 , 3010 , 3000, 2032 was 5 , 4 , 3, 2 */ 
 		}
 		pclose( lIn ) ;
+		if (tinyfd_verbose) printf("lZenityVersion %d\n", lZenityVersion ) ;	
 	}
 
-	if (tinyfd_verbose) printf("lZenityVersion %d\n", lZenityVersion ) ;	
 	return graphicMode() ? lZenityVersion : 0 ;
 }
 
