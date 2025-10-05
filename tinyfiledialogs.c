@@ -4234,51 +4234,10 @@ int tfd_zenityPresent(void)
 	if ( lZenityPresent < 0 )
 	{
 		lZenityPresent = detectPresence("zenity") ;
-		tfd_zenityVersion();
+		if ( lZenityPresent ) tfd_zenityVersion();
 	}
 	return lZenityPresent && graphicMode( ) ;
 }
-
-
-/*int tfd_zenity3Present(void)
-{
-	static int lZenity3Present = -1 ;
-	char lBuff[MAX_PATH_OR_CMD] ;
-	FILE * lIn ;
-	int lIntTmp ;
-
-	if ( lZenity3Present < 0 )
-	{
-		lZenity3Present = 0 ;
-		if ( tfd_zenityPresent() )
-		{
-			lIn = ( FILE * ) popen( "zenity --version" , "r" ) ;
-			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
-			{
-				if ( atoi(lBuff) >= 3 )
-				{
-					lZenity3Present = 3 ;
-					lIntTmp = atoi(strtok(lBuff,".")+2 ) ;
-					if ( lIntTmp >= 18 )
-					{
-						lZenity3Present = 5 ;
-					}
-					else if ( lIntTmp >= 10 )
-					{
-						lZenity3Present = 4 ;
-					}
-				}
-				else if ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+2 ) >= 32 ) )
-				{
-					lZenity3Present = 2 ;
-				}
-				if (tinyfd_verbose) printf("zenity type %d\n", lZenity3Present);
-			}
-			pclose( lIn ) ;
-		}
-	}
-	return graphicMode() ? lZenity3Present : 0 ;
-}*/
 
 
 int tfd_kdialogPresent(void)
@@ -4812,20 +4771,21 @@ int tinyfd_messageBox(
 				if (aMessage && strlen(aMessage)) strcat(lDialogString, aMessage) ;
 				strcat(lDialogString, "\"") ;
 
-				if ( (tfd_zenityVersion() >= 3000) || (!tfd_zenityPresent() && (tfd_shellementaryPresent()
-					|| tfd_qarmaPresent() || tfd_boxerPresent() ) ) )
+				if ( (tfd_zenityVersion()>=3000) || tfd_boxerPresent() )
 				{
-						strcat( lDialogString , " --icon-name=dialog-" ) ;
-						if ( aIconType && (! strcmp( "question" , aIconType )
-						  || ! strcmp( "error" , aIconType )
-						  || ! strcmp( "warning" , aIconType ) ) )
-						{
-								strcat( lDialogString , aIconType ) ;
-						}
-						else
-						{
-								strcat( lDialogString , "information" ) ;
-						}
+					if ( (tfd_zenityVersion()>=3900) || tfd_boxerPresent() ) strcat( lDialogString , " --icon=dialog-" ) ;
+					else strcat( lDialogString , " --icon-name=dialog-" ) ;
+
+					if ( aIconType && (! strcmp( "question" , aIconType )
+					  || ! strcmp( "error" , aIconType )
+					  || ! strcmp( "warning" , aIconType ) ) )
+					{
+						strcat( lDialogString , aIconType ) ;
+					}
+					else
+					{
+						strcat( lDialogString , "information" ) ;
+					}
 				}
 
 				if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
@@ -4837,7 +4797,7 @@ int tinyfd_messageBox(
 				}
 				else
 				{
-						strcat( lDialogString , ");if [ $? = 0 ];then echo 1;else echo 0;fi");
+					strcat( lDialogString , ");if [ $? = 0 ];then echo 1;else echo 0;fi");
 				}
 	  }
 
