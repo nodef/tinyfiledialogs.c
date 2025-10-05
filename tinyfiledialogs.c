@@ -4222,7 +4222,6 @@ int tfd_zenityVersion(void)
 		}
 		pclose( lIn ) ;
 	}
-	else lZenityVersion = 0 ;
 
 	if (tinyfd_verbose) printf("lZenityVersion %d\n", lZenityVersion ) ;	
 	return graphicMode() ? lZenityVersion : 0 ;
