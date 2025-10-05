@@ -4614,9 +4614,9 @@ int tinyfd_messageBox(
 
 		strcat( lDialogString,
 "-e 'if vButton is \"Yes\" then' -e 'return 1'\
--e 'else if vButton is \"OK\" then' -e 'return 1'\
--e 'else if vButton is \"No\" then' -e 'return 2'\
--e 'else' -e 'return 0' -e 'end if' " );
+ -e 'else if vButton is \"OK\" then' -e 'return 1'\
+ -e 'else if vButton is \"No\" then' -e 'return 2'\
+ -e 'else' -e 'return 0' -e 'end if' " );
 
 		strcat( lDialogString, "-e 'on error number -128' " ) ;
 		strcat( lDialogString, "-e '0' " );
