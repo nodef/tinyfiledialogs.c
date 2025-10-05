@@ -111,7 +111,7 @@ misrepresented as being the original software.
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char tinyfd_version[8] = "3.21";
+char tinyfd_version[8] = "3.21.1";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
