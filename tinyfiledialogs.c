@@ -4204,17 +4204,6 @@ int tfd_yadPresent(void)
 }
 
 
-int tfd_zenityPresent(void)
-{
-	static int lZenityPresent = -1 ;
-	if ( lZenityPresent < 0 )
-	{
-		lZenityPresent = detectPresence("zenity") ;
-	}
-	return lZenityPresent && graphicMode( ) ;
-}
-
-
 int tfd_zenityVersion(void)
 {
 	static int lZenityVersion = -1 ;
@@ -4222,7 +4211,7 @@ int tfd_zenityVersion(void)
 	FILE * lIn ;
 	int lIntTmp ;
 
-	if ( lZenityVersion < 0 && tfd_zenityPresent( ) )
+	if ( lZenityVersion < 0 )
 	{
 		lIn = ( FILE * ) popen( "zenity --version" , "r" ) ;
 		if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
@@ -4240,7 +4229,19 @@ int tfd_zenityVersion(void)
 }
 
 
-int tfd_zenity3Present(void)
+int tfd_zenityPresent(void)
+{
+	static int lZenityPresent = -1 ;
+	if ( lZenityPresent < 0 )
+	{
+		lZenityPresent = detectPresence("zenity") ;
+		tfd_zenityVersion();
+	}
+	return lZenityPresent && graphicMode( ) ;
+}
+
+
+/*int tfd_zenity3Present(void)
 {
 	static int lZenity3Present = -1 ;
 	char lBuff[MAX_PATH_OR_CMD] ;
@@ -4252,7 +4253,6 @@ int tfd_zenity3Present(void)
 		lZenity3Present = 0 ;
 		if ( tfd_zenityPresent() )
 		{
-			tfd_zenityVersion( ) ;
 			lIn = ( FILE * ) popen( "zenity --version" , "r" ) ;
 			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
 			{
@@ -4279,7 +4279,7 @@ int tfd_zenity3Present(void)
 		}
 	}
 	return graphicMode() ? lZenity3Present : 0 ;
-}
+}*/
 
 
 int tfd_kdialogPresent(void)
@@ -4740,7 +4740,7 @@ int tinyfd_messageBox(
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
 						strcpy( lDialogString , "szAnswer=$(zenity" ) ;
-						if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
+						if ( (tfd_zenityVersion() >= 3010) && !getenv("SSH_TTY") && tfd_xpropPresent() )
 						{
 								strcat(lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
@@ -4813,8 +4813,8 @@ int tinyfd_messageBox(
 				if (aMessage && strlen(aMessage)) strcat(lDialogString, aMessage) ;
 				strcat(lDialogString, "\"") ;
 
-				if ( (tfd_zenity3Present() >= 3) || (!tfd_zenityPresent() && (tfd_shellementaryPresent()
-					|| tfd_qarmaPresent() /*|| tfd_shantyPresent() || tfd_boxerPresent()*/) ) )
+				if ( (tfd_zenityVersion() >= 3000) || (!tfd_zenityPresent() && (tfd_shellementaryPresent()
+					|| tfd_qarmaPresent() || tfd_boxerPresent() ) ) )
 				{
 						strcat( lDialogString , " --icon-name=dialog-" ) ;
 						if ( aIconType && (! strcmp( "question" , aIconType )
@@ -5791,7 +5791,7 @@ aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
 			else strcat(lDialogString, "''" ) ;
 			strcat( lDialogString , "\"" ) ;
 		}
-		else if ( tfd_zenity3Present()>=5 )
+		else if ( tfd_zenityVersion()>=3018 )
 		{
 				/* zenity 2.32 & 3.14 has the notification but with a bug: it doesnt return from it */
 				/* zenity 3.8 show the notification as an alert ok cancel box */
@@ -5955,7 +5955,7 @@ char * tinyfd_inputBox(
 			{
 					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
 					strcpy( lDialogString , "szAnswer=$(zenity" ) ;
-					if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
+					if ( (tfd_zenityVersion() >= 3010) && !getenv("SSH_TTY") && tfd_xpropPresent() )
 					{
 							strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 					}
@@ -6558,7 +6558,7 @@ char * tinyfd_saveFileDialog(
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
 						strcpy( lDialogString , "zenity" ) ;
-												if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
+						if ( (tfd_zenityVersion() >= 3010) && !getenv("SSH_TTY") && tfd_xpropPresent() )
 						{
 								strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
@@ -7098,7 +7098,7 @@ char * tinyfd_openFileDialog(
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
 						strcpy( lDialogString , "zenity" ) ;
-						if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
+						if ( (tfd_zenityVersion() >= 3010) && !getenv("SSH_TTY") && tfd_xpropPresent() )
 						{
 							strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
@@ -7586,7 +7586,7 @@ char * tinyfd_selectFolderDialog(
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
 						strcpy( lDialogString , "zenity" ) ;
-						if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
+						if ( (tfd_zenityVersion() >= 3010) && !getenv("SSH_TTY") && tfd_xpropPresent() )
 						{
 								strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
@@ -7848,7 +7848,7 @@ char * tinyfd_colorChooser(
 				char * lPointerInputBox;
 		FILE * lIn ;
 		int i ;
-		int lWasZenity3 = 0 ;
+		int lWasZenity2032 = 0 ;
 		int lWasOsascript = 0 ;
 		int lWasXdialog = 0 ;
 		lBuff[0]='\0';
@@ -7925,15 +7925,15 @@ to set mycolor to choose color default color {");
 						strcat(lDialogString, "\"") ;
 				}
 		}
-		else if ( tfd_zenity3Present() || tfd_matedialogPresent() || tfd_shellementaryPresent()
+		else if ( (tfd_zenityVersion()>=2032) || tfd_matedialogPresent() || tfd_shellementaryPresent()
 				|| tfd_qarmaPresent() || tfd_shantyPresent() || tfd_boxerPresent() )
 		{
-				lWasZenity3 = 1 ;
-				if ( tfd_zenity3Present() )
+				lWasZenity2032 = 1 ;
+				if ( tfd_zenityVersion()>=2032 )
 				{
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity3");return (char *)1;}
 						strcpy( lDialogString , "zenity" );
-												if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
+						if ( (tfd_zenityVersion() >=3010) && !getenv("SSH_TTY") && tfd_xpropPresent() )
 						{
 								strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
 						}
@@ -7970,7 +7970,7 @@ to set mycolor to choose color default color {");
 				else ;
 				
 				strcat( lDialogString , " --color-selection" ) ;
-				if ( tfd_zenity3Present() || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
+				if ( tfd_zenityVersion()>=2032 || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() || tfd_boxerPresent() )
 				{
 					strcat( lDialogString , " --show-palette" ) ;
 				}
@@ -8111,7 +8111,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 		lBuff[strlen( lBuff ) -1] = '\0' ;
 	}
 
-		if ( lWasZenity3 )
+	if ( lWasZenity2032 )
 	{
 				if ( lBuff[0] == '#' )
 				{
