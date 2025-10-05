@@ -4193,66 +4193,92 @@ int tfd_xpropPresent(void)
 }
 
 
-int tfd_zenityPresent(void)
+int tfd_yadPresent(void)
 {
-		static int lZenityPresent = -1 ;
-		if ( lZenityPresent < 0 )
-		{
-				lZenityPresent = detectPresence("zenity") ;
-		}
-		return lZenityPresent && graphicMode( ) ;
+	static int lYadPresent = -1;
+	if (lYadPresent < 0)
+	{
+		lYadPresent = detectPresence("yad");
+	}
+	return lYadPresent && graphicMode();
 }
 
 
-int tfd_yadPresent(void)
+int tfd_zenityPresent(void)
 {
-   static int lYadPresent = -1;
-   if (lYadPresent < 0)
-   {
-	  lYadPresent = detectPresence("yad");
-   }
-   return lYadPresent && graphicMode();
+	static int lZenityPresent = -1 ;
+	if ( lZenityPresent < 0 )
+	{
+		lZenityPresent = detectPresence("zenity") ;
+	}
+	return lZenityPresent && graphicMode( ) ;
+}
+
+
+int tfd_zenityVersion(void)
+{
+	static int lZenityVersion = -1 ;
+	char lBuff[MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+	int lIntTmp ;
+
+	if ( lZenityVersion < 0 && tfd_zenityPresent( ) )
+	{
+		lIn = ( FILE * ) popen( "zenity --version" , "r" ) ;
+		if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
+		{
+			lZenityVersion = 1000 * atoi( lBuff ) ;
+			lZenityVersion += atoi( strtok( lBuff, "." ) + 2 ) ;
+			/* 3018 , 3010 , 3000, 2032 was 5 , 4 , 3, 2 */ 
+		}
+		pclose( lIn ) ;
+	}
+	else lZenityVersion = 0 ;
+
+	if (tinyfd_verbose) printf("lZenityVersion %d\n", lZenityVersion ) ;	
+	return graphicMode() ? lZenityVersion : 0 ;
 }
 
 
 int tfd_zenity3Present(void)
 {
-		static int lZenity3Present = -1 ;
-		char lBuff[MAX_PATH_OR_CMD] ;
-		FILE * lIn ;
-				int lIntTmp ;
+	static int lZenity3Present = -1 ;
+	char lBuff[MAX_PATH_OR_CMD] ;
+	FILE * lIn ;
+	int lIntTmp ;
 
-		if ( lZenity3Present < 0 )
+	if ( lZenity3Present < 0 )
+	{
+		lZenity3Present = 0 ;
+		if ( tfd_zenityPresent() )
 		{
-				lZenity3Present = 0 ;
-				if ( tfd_zenityPresent() )
+			tfd_zenityVersion( ) ;
+			lIn = ( FILE * ) popen( "zenity --version" , "r" ) ;
+			if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
+			{
+				if ( atoi(lBuff) >= 3 )
 				{
-						lIn = ( FILE * ) popen( "zenity --version" , "r" ) ;
-						if ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
-						{
-								if ( atoi(lBuff) >= 3 )
-								{
-									lZenity3Present = 3 ;
-									lIntTmp = atoi(strtok(lBuff,".")+2 ) ;
-									if ( lIntTmp >= 18 )
-									{
-											lZenity3Present = 5 ;
-									}
-									else if ( lIntTmp >= 10 )
-									{
-											lZenity3Present = 4 ;
-									}
-																}
-								else if ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+2 ) >= 32 ) )
-								{
-										lZenity3Present = 2 ;
-								}
-								if (tinyfd_verbose) printf("zenity type %d\n", lZenity3Present);
-						}
-						pclose( lIn ) ;
+					lZenity3Present = 3 ;
+					lIntTmp = atoi(strtok(lBuff,".")+2 ) ;
+					if ( lIntTmp >= 18 )
+					{
+						lZenity3Present = 5 ;
+					}
+					else if ( lIntTmp >= 10 )
+					{
+						lZenity3Present = 4 ;
+					}
 				}
+				else if ( ( atoi(lBuff) == 2 ) && ( atoi(strtok(lBuff,".")+2 ) >= 32 ) )
+				{
+					lZenity3Present = 2 ;
+				}
+				if (tinyfd_verbose) printf("zenity type %d\n", lZenity3Present);
+			}
+			pclose( lIn ) ;
 		}
-		return graphicMode() ? lZenity3Present : 0 ;
+	}
+	return graphicMode() ? lZenity3Present : 0 ;
 }
 
 
