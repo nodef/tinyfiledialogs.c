@@ -3,6 +3,10 @@ Copyright (c) 2014 - 2025 Guillaume Vareille http://ysengrin.com
 	 ________________________________________________________________
 	|                                                                |
 	| 100% compatible C C++  ->  You can rename this .c file as .cpp |
+	| 100% compatible C C++  ->  You can rename this .c file as .cpp |
+	| 100% compatible C C++  ->  You can rename this .c file as .cpp |
+	| 100% compatible C C++  ->  You can rename this .c file as .cpp |
+	| 100% compatible C C++  ->  You can rename this .c file as .cpp |
 	|________________________________________________________________|
 
 ********* TINY FILE DIALOGS OFFICIAL WEBSITE IS ON SOURCEFORGE *********
