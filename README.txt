@@ -35,12 +35,13 @@ Included in LWJGL(java), Rust, Haskell, Allegrobasic.
 | | |____________________________________________________________________| | |
 | |________________________________________________________________________| |
 |____________________________________________________________________________|
-         ___________________________________________________________
-        |                                                           |
-        | v3.10: NEW FORTRAN module fully implemented with examples |
-        | v3.13: NEW PASCAL unit fully implemented with examples    |
-        | v3.14: NEW R inteface fully implemented with examples     |
-        |___________________________________________________________|
+
+         ———————————————————————————————————————————————————————
+        | v3.10: FORTRAN module fully implemented with examples |
+        | v3.13: PASCAL unit fully implemented with examples    |
+        | v3.14: R inteface fully implemented with examples     |
+		| v3.21: New HAIKU porting                              |
+         ———————————————————————————————————————————————————————
      _____________________________________________________________________
     |                                                                     |
     | my email address is at the top of the header file tinyfiledialogs.h |
