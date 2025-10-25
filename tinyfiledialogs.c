@@ -11,7 +11,7 @@ Copyright (c) 2014 - 2025 Guillaume Vareille http://ysengrin.com
 
 ********* TINY FILE DIALOGS OFFICIAL WEBSITE IS ON SOURCEFORGE *********
   _________
- /         \ tinyfiledialogs.c v3.21.1 [Oct 5, 2025] zlib licence
+ /         \ tinyfiledialogs.c v3.21.2 [Oct 25, 2025] zlib licence
  |tiny file| Unique code file created [November 9, 2014]
  | dialogs |
  \____  ___/ http://tinyfiledialogs.sourceforge.net
@@ -115,7 +115,7 @@ misrepresented as being the original software.
 #endif
 #define LOW_MULTIPLE_FILES 32
 
-char tinyfd_version[8] = "3.21.1";
+char tinyfd_version[8] = "3.21.2";
 
 /******************************************************************************************************/
 /**************************************** UTF-8 on Windows ********************************************/
@@ -4224,7 +4224,6 @@ int tfd_zenityVersion(void)
 	static int lZenityVersion = -1 ;
 	char lBuff[MAX_PATH_OR_CMD] ;
 	FILE * lIn ;
-	int lIntTmp ;
 
 	if ( lZenityVersion < 0 )
 	{
@@ -4738,7 +4737,8 @@ int tinyfd_messageBox(
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return 1;}
 						strcpy( lDialogString , "szAnswer=$(shanty" ) ;
 				}
-				else ;
+				else {}
+
 				strcat(lDialogString, " --");
 
 				if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
@@ -5954,7 +5954,7 @@ char * tinyfd_inputBox(
 					if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return (char *)1;}
 					strcpy( lDialogString ,  "szAnswer=$(shanty" ) ;
 			}
-			else ;
+			else {}
 			
 			strcat( lDialogString ," --entry" ) ;
 
@@ -6557,7 +6557,7 @@ char * tinyfd_saveFileDialog(
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return (char *)1;}
 						strcpy( lDialogString , "shanty" ) ;
 				}
-				else ;
+				else {}
 				
 				strcat(lDialogString, " --file-selection --save --confirm-overwrite" ) ;
 
@@ -7097,7 +7097,7 @@ char * tinyfd_openFileDialog(
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return (char *)1;}
 						strcpy( lDialogString , "shanty" ) ;
 				}
-				else;
+				else {}
 				
 				strcat( lDialogString , " --file-selection" ) ;
 
@@ -7585,7 +7585,7 @@ char * tinyfd_selectFolderDialog(
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return (char *)1;}
 						strcpy( lDialogString , "shanty" ) ;
 				}
-				else ;
+				else {}
 
 				strcat( lDialogString , " --file-selection --directory" ) ;
 
@@ -7932,7 +7932,7 @@ to set mycolor to choose color default color {");
 						if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shanty");return (char *)1;}
 						strcpy( lDialogString , "shanty" ) ;
 				}
-				else ;
+				else {}
 				
 				strcat( lDialogString , " --color-selection" ) ;
 				if ( tfd_zenityVersion()>=2032 || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() || tfd_boxerPresent() )
@@ -7998,7 +7998,7 @@ to set mycolor to choose color default color {");
 \nif res[1] is not None:\n\tprint(res[1])\"" ) ;
 				}
 				else if ( tkinter2Present( ) )
-		{
+				{
 				if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python2-tkinter");return (char *)1;}
 								strcpy( lDialogString , "export PYTHONIOENCODING=utf-8;" ) ;
 								strcat( lDialogString , gPython2Name ) ;
