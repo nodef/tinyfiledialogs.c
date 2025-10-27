@@ -36,12 +36,12 @@ Included in LWJGL(java), Rust, Haskell, Allegrobasic.
 | |________________________________________________________________________| |
 |____________________________________________________________________________|
 
-         ———————————————————————————————————————————————————————
+         ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         | v3.10: FORTRAN module fully implemented with examples |
         | v3.13: PASCAL unit fully implemented with examples    |
         | v3.14: R inteface fully implemented with examples     |
 		| v3.21: New HAIKU porting                              |
-         ———————————————————————————————————————————————————————
+         ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      _____________________________________________________________________
     |                                                                     |
     | my email address is at the top of the header file tinyfiledialogs.h |
@@ -78,7 +78,42 @@ Included in LWJGL(java), Rust, Haskell, Allegrobasic.
     |__________________________________________|
 
 
+
+_____________________________________________________________________________________
+|  _______________________________________________________________________________  |
+| |                                                                               | |
+| | Installation                                                                  | |
+| |_______________________________________________________________________________| |
+|___________________________________________________________________________________|
+
+Run:
+```bash
+$ npm i tinyfiledialogs.c
+```
+
+And then include `tinyfiledialogs.h`, among others, as follows:
+```c
+#include "node_modules/tinyfiledialogs.c/tinyfiledialogs.h"
+#include "node_modules/tinyfiledialogs.c/more_dialogs/tinyfd_moredialogs.h"
+```
+
+You may also want to include `tinyfiledialogs.c`, and related, as follows:
+```c
+#ifndef __TINYFILEDIALOGS_C__
+#define __TINYFILEDIALOGS_C__
+#include "node_modules/tinyfiledialogs.c/tinyfiledialogs.c"
+#include "node_modules/tinyfiledialogs.c/more_dialogs/tinyfd_moredialogs.c"
+#endif
+```
+
+This will include both the function declaration and their definitions into a single file.
+
+
 See compilation instructions at the end of this file
+
+
+____________________________________________________________________________________
+
 
 void tinyfd_beep();
 
@@ -126,7 +161,7 @@ char const * tinyfd_selectFolderDialog(
 
 char const * tinyfd_colorChooser(
     char const * aTitle , // NULL or ""
-    char const * aDefaultHexRGB , // NULL or "#FF0000‚Ç¥
+    char const * aDefaultHexRGB , // NULL or "#FF0000ï¿½Ç¥
     unsigned char const aDefaultRGB[3] , // unsigned char lDefaultRGB[3] = { 0 , 128 , 255 };
     unsigned char aoResultRGB[3] ); // unsigned char lResultRGB[3];
         // returns the hexcolor as a string "#FF0000"

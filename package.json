@@ -1,0 +1,15 @@
+{
+  "name": "tinyfiledialogs.c",
+  "version": "3.21.2",
+  "description": "Modal dialogs inc. file open/save (Win/Mac/Linux); Guillaume Vareille (2014).",
+  "keywords": ["c", "library", "dialog", "file", "open", "save"],
+  "license": "Zlib",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodef/tinyfiledialogs.c.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nodef/tinyfiledialogs.c/issues"
+  },
+  "homepage": "https://github.com/nodef/tinyfiledialogs.c#readme"
+}
